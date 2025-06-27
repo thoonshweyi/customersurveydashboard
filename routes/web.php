@@ -8,6 +8,7 @@ use App\Http\Controllers\RoleUsersController;
 use App\Http\Controllers\DashboardsController;
 use App\Http\Controllers\PermissionsController;
 use App\Http\Controllers\PermissionRolesController;
+use App\Http\Controllers\CustomerSurveyFormsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,6 +48,8 @@ Route::middleware('auth')->group(function () {
 
     Route::resource("roleusers",RoleUsersController::class);
     Route::delete("/roleusersbulkdeletes",[RoleUsersController::class,"bulkdeletes"])->name("roleusers.bulkdeletes");
+
+    Route::resource('customersurveyforms',CustomerSurveyFormsController::class);
 
 });
 

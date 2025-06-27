@@ -118,12 +118,8 @@
 
 @endsection
 
-@section("css")
-     <link href="{{ asset('assets/libs/select2/select2.min.css') }}" rel="stylesheet" />
-@endsection
 
 @section('scripts')
-<script src="{{ asset('assets/libs/select2/select2.min.js') }}" type="text/javascript"></script>
 <script type="text/javascript">
     $('#branch_name').select2({
         width: '100%',

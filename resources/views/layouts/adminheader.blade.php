@@ -22,6 +22,9 @@
         <!-- toastr css1 js1 -->
         {{-- <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" /> --}}
 
+        {{-- select css1 js1 --}}
+        <link href="{{ asset('assets/libs/select2/select2.min.css') }}" rel="stylesheet" />
+
         <!-- custom css css1 -->
         <link href="{{ asset('assets/dist/css/style.css') }}" rel="stylesheet" type="text/css"/>
 

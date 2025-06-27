@@ -95,6 +95,10 @@
 
         <!-- toastr css1 js1 -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" type="text/javascript"></script>
+
+        {{-- select css1 js1 --}}
+        <script src="{{ asset('assets/libs/select2/select2.min.js') }}" type="text/javascript"></script>
+
         <script>
                 toastr.options = {
                     "progressBar":true,

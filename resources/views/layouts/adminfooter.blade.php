@@ -118,11 +118,11 @@
                 <script>toastr.error('{{ session()->get("error") }}', 'Inconceivable')</script>
             @endif
 
-            @if($errors)
+            {{-- @if($errors)
                 @foreach($errors->all() as $error)
                     <script>toastr.error('{{$error}}', 'Warning!',{timeOut:3000})</script>
                 @endforeach
-            @endif
+            @endif --}}
 
 
 

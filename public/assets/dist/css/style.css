@@ -361,10 +361,23 @@ table#mytable th, table#mytable td{
 .csform-card.active .toolboxs{
     display: block;
 }
-.csform-card.active .question, .csform-card.active .options{
-    border: none;
+.question{
+    border: none !important;
 }
-
+.options{
+    border: none !important;
+}
+.csform-card.active .question, .csform-card.active .options{
+    /* border: none; */
+	border-bottom: 1px solid #ccc !important;
+	border-radius: 0;
+	box-shadow: none;
+}
+.section-card.active .question, .section-card.active .options{
+    border-bottom: 1px solid #ccc !important;
+	border-radius: 0;
+	box-shadow: none;
+}
 .toolboxitems{
     width: 25px;
     height: 25px;

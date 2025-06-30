@@ -1,14 +1,16 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FormsController;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\BranchController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleUsersController;
+use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\DashboardsController;
 use App\Http\Controllers\PermissionsController;
 use App\Http\Controllers\PermissionRolesController;
-use App\Http\Controllers\FormsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +39,8 @@ Route::middleware('auth')->group(function () {
     Route::get("/dashboards",[DashboardsController::class,'index'])->name("dashboard.index");
 
     Route::resource('users', UsersController::class);
+    Route::resource('branches', BranchController::class);
+    Route::resource('categories', CategoriesController::class);
     Route::resource("roles",RolesController::class);
 
     Route::resource("permissions",PermissionsController::class);

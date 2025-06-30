@@ -15,6 +15,7 @@ class Option extends Model
         'section_id',
         'question_id',
         'name',
+        'value',
         'image',
     ];
 }

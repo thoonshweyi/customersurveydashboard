@@ -11,14 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('options', function (Blueprint $table) {
+        Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger("form_id");
-            $table->unsignedBigInteger("section_id");
-            $table->unsignedBigInteger("question_id");
-            $table->string("name");
-            $table->string("value");
-            $table->string('image')->nullable();
+            $table->string('name');
+            $table->string('mm_name')->nullable();
+            $table->unsignedBigInteger("status_id");
+            $table->unsignedBigInteger("user_id");
             $table->timestamps();
         });
     }
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('options');
+        Schema::dropIfExists('categories');
     }
 };

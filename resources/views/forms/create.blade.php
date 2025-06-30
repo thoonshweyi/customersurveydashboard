@@ -93,12 +93,23 @@
                                                     placeholder="Section description"
                                                 />
                                             </div>
+
+
+                                        </div>
+                                         <div class="toolboxs">
+                                                <a href="javascript:void(0)" class="toolboxitems add-btn"><i class="fas fa-plus-circle"></i></a>
+                                                <a href="javascript:void(0)" class="toolboxitems addsection-btn" title="Add Section">
+                                                    <i class="section-divider">
+                                                        <div class="divider-lines"></div>
+                                                        <div class="divider-lines"></div>
+                                                    </i>
+                                                </a>
                                         </div>
                                     </div>
 
                                     <div class="question-container">
                                         @foreach ($section['questions'] ?? [] as $questionIndex => $question)
-                                            <div class="csform-card mb-4" data-question-index="{{ $questionIndex }}">
+                                            <div class="csform-card mb-4" data-question-index="{{ $questionIndex }}" data-option-count="{{ count($question['options'] ?? []) }}">
                                                 <div class="row">
                                                     <div class="col-md-8">
                                                         <input
@@ -117,6 +128,7 @@
                                                             <option value="radio" {{ ($question['type'] ?? '') == 'radio' ? 'selected' : '' }}>Multiple Choice</option>
                                                             <option value="checkbox" {{ ($question['type'] ?? '') == 'checkbox' ? 'selected' : '' }}>Checkboxes</option>
                                                             <option value="selectbox" {{ ($question['type'] ?? '') == 'selectbox' ? 'selected' : '' }}>Dropdown</option>
+                                                            <option value="rating" {{ ($question['type'] ?? '') == 'rating' ? 'selected' : '' }}>Rating</option>
                                                         </select>
                                                     </div>
 
@@ -148,22 +160,47 @@
                                                             @endphp
 
                                                             @if (!empty($question['options']))
-                                                                @foreach ($question['options'] as $option)
-                                                                    <div class="d-flex align-items-center mb-2">
-                                                                        <i class="{{ $iconClass }} text-secondary fa-sm"></i>
-                                                                        <input
-                                                                            type="text"
-                                                                            id="options"
-                                                                            name="sections[{{ $sectionIndex }}][questions][{{ $questionIndex }}][options][]"
-                                                                            class="form-control underline-only option-input options"
-                                                                            value="{{ $option }}"
-                                                                            placeholder="Option"
-                                                                        />
+                                                                @if($question['type'] != 'rating')
+                                                                    @foreach ($question['options'] as $optionIndex =>$option)
+                                                                        <div class="d-flex align-items-center mb-2">
+                                                                            <i class="{{ $iconClass }} text-secondary fa-sm"></i>
+                                                                            <input
+                                                                                type="text"
+                                                                                id="options"
+                                                                                name="sections[{{ $sectionIndex }}][questions][{{ $questionIndex }}][options][{{$optionIndex}}][name]"
+                                                                                class="form-control underline-only option-input options"
+                                                                                value="{{ $option['name'] ?? '' }}"
+                                                                                placeholder="Option"
+                                                                            />
+                                                                            <input type="hidden" name="sections[{{ $sectionIndex }}][questions][{{ $questionIndex }}][options][{{$optionIndex}}][value]" value="{{ $option['value'] ?? '' }}"/>
+                                                                        </div>
+                                                                    @endforeach
+                                                                @elseif ($question['type'] == 'rating')
+                                                                    <div class="d-flex justify-content-around align-items-center mb-2">
+                                                                            @foreach ($question['options'] as $optionIndex =>$option)
+                                                                            <div class="text-center">
+                                                                                <div class="form-group">
+                                                                                        <label>{{$optionIndex + 1}}</label>
+                                                                                        <input
+                                                                                            type="hidden"
+                                                                                            id="options"
+                                                                                            name="sections[{{ $sectionIndex }}][questions][{{ $questionIndex }}][options][{{$optionIndex}}[name]"
+                                                                                            class="form-control underline-only option-input options"
+                                                                                            placeholder="Option"
+                                                                                            value = "${i+1}"
+                                                                                        />
+                                                                                        <input type="hidden" name="sections[{{ $sectionIndex }}]][questions][{{ $questionIndex }}][options][{{$optionIndex}}][value]" value="${{$optionIndex + 1}}" />
+                                                                                </div>
+                                                                                <i class="far fa-star text-secondary fa-sm"></i>
+                                                                            </div>
+                                                                            @endforeach
                                                                     </div>
-                                                                @endforeach
+                                                                @endif
                                                                 <div class="d-flex align-items-center">
                                                                     <i class="{{ $iconClass }} text-secondary fa-sm"></i>
                                                                     <a class="add-option {{ $addOptionClass }}" href="javascript:void(0)">Add Option</a>
+                                                                    <span>or</span>
+                                                                    <a href="#importmodal" data-bs-toggle='modal' class="importmodalbtn">Import Questions</a>
                                                                 </div>
                                                             @else
                                                                 {!! $optiontext !!}
@@ -174,7 +211,7 @@
 
                                                 <div class="toolboxs">
                                                     <a href="javascript:void(0)" class="toolboxitems add-btn"><i class="fas fa-plus-circle"></i></a>
-                                                    <a href="javascript:void(0)" class="toolboxitems"><i class="fas fa-trash-alt fa-sm text-danger"></i></a>
+                                                    <a href="javascript:void(0)" class="toolboxitems remove-btns"><i class="fas fa-trash-alt fa-sm text-danger"></i></a>
                                                     <a href="javascript:void(0)" class="toolboxitems"><i class="fas fa-copy"></i></a>
                                                     <a href="javascript:void(0)" class="toolboxitems addsection-btn" title="Add Section">
                                                         <i class="section-divider">
@@ -200,6 +237,55 @@
           </div>
      </div>
      <!-- End Page Content Area -->
+
+
+         <!-- START MODAL AREA -->
+          <!-- start edit modal -->
+               <div id="importmodal" class="modal fade">
+                    <div class="modal-dialog modal-dialog-centered">
+                         <div class="modal-content">
+                              <div class="modal-header">
+                                   <h6 class="modal-title">Import Modal</h6>
+                                   <button type="" class="btn-close" data-bs-dismiss="modal"></button>
+                              </div>
+
+                              <div class="modal-body">
+                                   <form id="formaction" action="" method="POST">
+                                        <div class="row align-items-end">
+                                                <input type="hidden" id="questionIndex" value="">
+                                                <div class="col-md-12 form-group mb-3">
+                                                    <label for="tablename">Tables</label>
+                                                    <select name="tablename" id="tablename" class="form-control form-control-sm rounded tablename">
+                                                        @foreach($optionimporttables as $optionimporttable)
+                                                                <option value="{{$optionimporttable}}">{{$optionimporttable}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+
+                                              {{-- <div class="col-md-6 form-group mb-3">
+                                                  <label for="editpermission_id">Permission</label>
+                                                  <select name="editpermission_id" id="editpermission_id" class="form-control form-control-sm rounded-0 permission_id">
+                                                       @foreach($permissions as $permission)
+                                                            <option value="{{$permission['id']}}">{{$permission['name']}}</option>
+                                                       @endforeach
+                                                  </select>
+                                             </div> --}}
+
+                                             <div class="col-md-12 text-sm-end text-start mb-3">
+                                                  <button type="button" id="importoption_btn" class="btn btn-primary btn-sm rounded-0">Import</button>
+                                             </div>
+                                        </div>
+                                   </form>
+                              </div>
+
+                              <div class="modal-footer">
+
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          <!-- end edit modal -->
+     <!-- END MODAL AREA -->
 @endsection
 
 @section("css")
@@ -332,10 +418,19 @@
                                         />
                                     </div>
                                 </div>
+                                <div class="toolboxs">
+                                    <a href="javascript:void(0)" class="toolboxitems add-btn"><i class="fas fa-plus-circle"></i></a>
+                                    <a href="javascript:void(0)" class="toolboxitems addsection-btn" title="Add Section">
+                                        <i class="section-divider">
+                                            <div class="divider-lines"></div>
+                                            <div class="divider-lines"></div>
+                                        </i>
+                                    </a>
+                                </div>
                             </div>
 
                             <div class="question-container">
-                                <div class="csform-card mb-4" data-question-index="0">
+                                <div class="csform-card mb-4" data-question-index="0" data-option-count="1">
                                     <div class="row">
                                         <div class="col-md-8">
                                             <input
@@ -353,6 +448,7 @@
                                                 <option value="radio" selected>Multiple Choice</option>
                                                 <option value="checkbox">Checkboxes</option>
                                                 <option value="selectbox">Dropdown</option>
+                                                <option value="rating">Rating</option>
                                             </select>
                                         </div>
                                         <div class="col-lg-12 mt-2 option-container">
@@ -361,21 +457,24 @@
                                                 <input
                                                     type="text"
                                                     id="options"
-                                                    name="sections[${sectionIndex}][questions][0][options][]"
+                                                    name="sections[${sectionIndex}][questions][0][options][0][name]"
                                                     class="form-control underline-only option-input options"
                                                     placeholder="Option"
                                                 />
+                                                <input type="hidden" name="sections[${sectionIndex}][questions][0][options][0][value]" value="" />
                                             </div>
                                             <div class="d-flex align-items-center">
                                                 <i class="far fa-circle text-secondary fa-sm"></i>
                                                 <a class="add-option" href="javascript:void(0)">Add Option</a>
+                                                <span>or</span>
+                                                <a href="#importmodal" data-bs-toggle='modal' class="importmodalbtn">Import Questions</a>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="toolboxs">
                                         <a href="javascript:void(0)" class="toolboxitems add-btn"><i class="fas fa-plus-circle"></i></a>
-                                        <a href="javascript:void(0)" class="toolboxitems"><i class="fas fa-trash-alt fa-sm text-danger"></i></a>
+                                        <a href="javascript:void(0)" class="toolboxitems remove-btns"><i class="fas fa-trash-alt fa-sm text-danger"></i></a>
                                         <a href="javascript:void(0)" class="toolboxitems"><i class="fas fa-copy"></i></a>
                                         <a href="javascript:void(0)" class="toolboxitems addsection-btn" title="Add Section">
                                             <i class="section-divider">
@@ -421,7 +520,7 @@
                     let questionIndex = section.data("question-count");
 
                     const html = `
-                        <div class="csform-card mb-4" data-question-index="${questionIndex}">
+                        <div class="csform-card mb-4" data-question-index="${questionIndex}" data-option-count="1">
                             <div class="row">
                                 <div class="col-md-8">
                                     <input
@@ -439,6 +538,7 @@
                                         <option value="radio" selected>Multiple Choice</option>
                                         <option value="checkbox">Checkboxes</option>
                                         <option value="selectbox">Dropdown</option>
+                                        <option value="rating">Rating</option>
                                     </select>
                                 </div>
                                 <div class="col-lg-12 mt-2 option-container">
@@ -447,21 +547,25 @@
                                         <input
                                             type="text"
                                             id="options"
-                                            name="sections[${sectionIndex}][questions][${questionIndex}][options][]"
+                                            name="sections[${sectionIndex}][questions][${questionIndex}][options][0][name]"
                                             class="form-control underline-only option-input options"
                                             placeholder="Option"
                                         />
+                                        <input type="hidden" name="sections[${sectionIndex}][questions][0][options][0][value]" value="" />
                                     </div>
                                     <div class="d-flex align-items-center">
                                         <i class="far fa-circle text-secondary fa-sm"></i>
                                         <a class="add-option" href="javascript:void(0)">Add Option</a>
+                                        <span>or</span>
+                                        <a href="#importmodal" data-bs-toggle='modal' class="importmodalbtn">Import Questions</a>
                                     </div>
+
                                 </div>
                             </div>
 
                             <div class="toolboxs">
                                 <a href="javascript:void(0)" class="toolboxitems add-btn"><i class="fas fa-plus-circle"></i></a>
-                                <a href="javascript:void(0)" class="toolboxitems"><i class="fas fa-trash-alt fa-sm text-danger"></i></a>
+                                <a href="javascript:void(0)" class="toolboxitems remove-btns"><i class="fas fa-trash-alt fa-sm text-danger"></i></a>
                                 <a href="javascript:void(0)" class="toolboxitems"><i class="fas fa-copy"></i></a>
                                 <a href="javascript:void(0)" class="toolboxitems addsection-btn" title="Add Section">
                                     <i class="section-divider">
@@ -485,12 +589,14 @@
                // Start Question Type
                 $(document).on('change', ".question_type", function () {
                     const questionType = $(this).val();
-                    const card = $(this).closest('.csform-card');
+                    const question = $(this).closest('.csform-card');
                     const section = $(this).closest('.section');
-                    const optionContainer = card.find('.option-container');
+                    const optionContainer = question.find('.option-container');
 
                     const sectionIndex = section.data("section-index");
-                    const questionIndex = card.data("question-index");
+                    const questionIndex = question.data("question-index");
+
+                   let optionIndex = 0;
 
                     let html = "";
 
@@ -510,14 +616,17 @@
                                     <input
                                         type="text"
                                         id="options"
-                                        name="sections[${sectionIndex}][questions][${questionIndex}][options][]"
+                                        name="sections[${sectionIndex}][questions][${questionIndex}][options][0][name]"
                                         class="form-control underline-only option-input options"
                                         placeholder="Option"
                                     />
+                                    <input type="hidden" name="sections[${sectionIndex}][questions][0][options][0][value]" value="" />
                                 </div>
                                 <div class="d-flex align-items-center">
                                     <i class="far fa-circle text-secondary fa-sm"></i>
                                     <a class="add-option" href="javascript:void(0)">Add Option</a>
+                                    <span>or</span>
+                                    <a href="#importmodal" data-bs-toggle='modal' class="importmodalbtn">Import Questions</a>
                                 </div>
                             `;
                             break;
@@ -529,14 +638,17 @@
                                     <input
                                         type="text"
                                         id="options"
-                                        name="sections[${sectionIndex}][questions][${questionIndex}][options][]"
+                                        name="sections[${sectionIndex}][questions][${questionIndex}][options][0][name]"
                                         class="form-control underline-only option-input options"
                                         placeholder="Option"
                                     />
+                                    <input type="hidden" name="sections[${sectionIndex}][questions][0][options][0][value]" value="" />
                                 </div>
                                 <div class="d-flex align-items-center">
                                     <i class="far fa-square text-secondary fa-sm"></i>
                                     <a class="add-option checkboxs" href="javascript:void(0)">Add Option</a>
+                                    <span>or</span>
+                                    <a href="#importmodal" data-bs-toggle='modal' class="importmodalbtn">Import Questions</a>
                                 </div>
                             `;
                             break;
@@ -548,20 +660,54 @@
                                     <input
                                         type="text"
                                         id="options"
-                                        name="sections[${sectionIndex}][questions][${questionIndex}][options][]"
+                                        name="sections[${sectionIndex}][questions][${questionIndex}][options][0][name]"
                                         class="form-control underline-only option-input options"
                                         placeholder="Option"
                                     />
+                                    <input type="hidden" name="sections[${sectionIndex}][questions][0][options][0][value]" value="" />
                                 </div>
                                 <div class="d-flex align-items-center">
                                     <i class="fas fa-chevron-down text-secondary fa-sm"></i>
                                     <a class="add-option selectboxs" href="javascript:void(0)">Add Option</a>
+                                    <span>or</span>
+                                    <a href="#importmodal" data-bs-toggle='modal' class="importmodalbtn">Import Questions</a>
+                                </div>
+                            `;
+                            break;
+                        case "rating":
+
+                            let ratings = '';
+                            for (let i = 0; i < 5; i++) {
+                                ratings += `
+                                    <div class="text-center">
+                                        <div class="form-group">
+                                                <label>${i+1}</label>
+                                                <input
+                                                    type="hidden"
+                                                    id="options"
+                                                    name="sections[${sectionIndex}][questions][${questionIndex}][options][${i}][name]"
+                                                    class="form-control underline-only option-input options"
+                                                    placeholder="Option"
+                                                    value = "${i+1}"
+                                                />
+                                                <input type="hidden" name="sections[${sectionIndex}][questions][0][options][${i}][value]" value="${i+1}" />
+                                        </div>
+                                        <i class="far fa-star text-secondary fa-sm"></i>
+                                    </div>
+                                `;
+                            }
+
+                            html = `
+                                <div class="d-flex justify-content-around align-items-center mb-2">
+                                    ${ratings}
                                 </div>
                             `;
                             break;
                     }
 
                     optionContainer.html(html);
+                    {{-- question.data("option-count", optionIndex); --}}
+
                 });
 
                {{-- End Question Type  --}}
@@ -569,13 +715,19 @@
 
 
                 {{-- Start Add Option --}}
-                $(document).on("click", ".add-option", function () {
-                    const optionContainer = $(this).closest(".option-container");
-                    const card = $(this).closest(".csform-card");
+                $(document).on("click", ".add-option", function(){
+                    addoption.call(this);
+                });
+
+                function addoption(){
                     const section = $(this).closest(".section");
+                    const question = $(this).closest(".csform-card");
+                    const optionContainer = $(this).closest(".option-container");
 
                     const sectionIndex = section.data("section-index");
-                    const questionIndex = card.data("question-index");
+                    const questionIndex = question.data("question-index");
+                    let optionIndex = question.data("option-count");
+
 
                     let iconClass = "far fa-circle"; // default: radio
 
@@ -591,18 +743,122 @@
                             <input
                                 type="text"
                                 id="options"
-                                name="sections[${sectionIndex}][questions][${questionIndex}][options][]"
+                                name="sections[${sectionIndex}][questions][${questionIndex}][options][${optionIndex}][name]"
                                 class="form-control underline-only option-input options"
                                 placeholder="Option"
                             />
+                            <input type="hidden" name="sections[${sectionIndex}][questions][0][options][${optionIndex}][value]" value=""/>
                         </div>
                     `;
 
                     optionContainer.children().last().before(html);
-                });
+                    question.data("option-count", optionIndex + 1);
+                }
                {{-- End Add Option --}}
 
 
+               {{-- Start Import Modal Btn --}}
+
+                let targetQuestion;
+                function importoption(tablename){
+                    const section = $(this).closest(".section");
+                    const question = $(this).closest(".csform-card");
+                    const optionContainer = $(this).closest(".option-container");
+
+                    const sectionIndex = section.data("section-index");
+                    const questionIndex = question.data("question-index");
+                    let optioncount = question.data("option-count");
+
+
+                    let iconClass = "far fa-circle"; // default: radio
+
+                    if ($(this).hasClass("checkboxs")) {
+                        iconClass = "far fa-square";
+                    } else if ($(this).hasClass("selectboxs")) {
+                        iconClass = "fas fa-chevron-down";
+                    }
+
+                    var html = '';
+                    $.ajax({
+                         url:`/${tablename}`,
+                         type:"GET",
+                         dataType:"json",
+                         data:{
+                            retailbranch:true,
+                            retailcategory:true
+                        },
+                         success:function(response){
+                            console.log(response.data);
+                            let resdata = response.data;
+
+                            if(tablename == 'branches'){
+                                resdata.forEach((branch,optionIndex) => {
+                                    html += `
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="${iconClass} text-secondary fa-sm"></i>
+                                        <input
+                                            type="text"
+                                            id="options"
+                                            name="sections[${sectionIndex}][questions][${questionIndex}][options][${optionIndex}][name]"
+                                            class="form-control underline-only option-input options"
+                                            placeholder="Option"
+                                            value = "${branch.branch_name}"
+                                        />
+                                        <input type="hidden" name="sections[${sectionIndex}][questions][${questionIndex}][options][${optionIndex}][value]" value="${branch.branch_id}"/>
+                                    </div>
+                                    `;
+                                });
+                            }else if(tablename == 'categories'){
+                                resdata.forEach((category,optionIndex) => {
+
+                                    html += `
+                                        <div class="d-flex align-items-center mb-2">
+                                            <i class="${iconClass} text-secondary fa-sm"></i>
+                                            <input
+                                                type="text"
+                                                id="options"
+                                                name="sections[${sectionIndex}][questions][${questionIndex}][options][${optionIndex}][name]"
+                                                class="form-control underline-only option-input options"
+                                                placeholder="Option"
+                                                value = "${category.name}"
+                                            />
+                                            <input type="hidden" name="sections[${sectionIndex}][questions][${questionIndex}][options][${optionIndex}][value]" value="${category.id}"/>
+                                        </div>
+                                    `;
+                                });
+                            }
+
+
+                            optionContainer.children().remove();
+                            optionContainer.html(html);
+
+                            question.attr("data-option-count", resdata.length);
+
+                         }
+                    });
+                    {{--  --}}
+
+                }
+                $(document).on('click',".importmodalbtn",function(){
+                    targetQuestion = this;
+                });
+                {{-- End Import Modal Btn --}}
+
+                {{-- Start Import Option Btn --}}
+                $("#importoption_btn").click(function(){
+                    const tablename = $("#tablename").val();
+                    importoption.call(targetQuestion, tablename);
+                });
+                {{-- End Import Option Btn --}}
+
+
+
+                {{-- Start Remove Btn --}}
+                $(document).on("click",".remove-btns",function(){
+                       const question = $(this).closest(".csform-card");
+                       question.remove();
+                });
+                {{-- End Remove Btn --}}
 
           });
      </script>

@@ -325,7 +325,7 @@ table#mytable th, table#mytable td{
     width: 80%;
     font-size: 12px;
 }
-.add-option{
+.add-option,.importmodalbtn{
     font-size: 12px;
     padding: 6px 12px;
 }
@@ -359,6 +359,9 @@ table#mytable th, table#mytable td{
 
 }
 .csform-card.active .toolboxs{
+    display: block;
+}
+.section-card.active .toolboxs{
     display: block;
 }
 .question{

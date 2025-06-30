@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Exception;
 use App\Models\Form;
+use App\Models\Branch;
 use App\Models\Option;
 use App\Models\Section;
 use App\Models\Question;
@@ -21,11 +22,14 @@ class FormsController extends Controller
     }
     public function create()
     {
-        return view("forms.create");
+        $optionimporttables = ["branches", "categories"];
+        $branches = Branch::all();
+        return view("forms.create",compact("optionimporttables","branches"));
     }
 
     public function store(Request $request)
     {
+        // dd($request);
         $this->validate($request,[
             "title"=> "required",
             "description"=> "required",
@@ -35,6 +39,7 @@ class FormsController extends Controller
             "sections.*.questions.*.name" => "required",
             "sections.*.questions.*.type" => "required",
             "sections.*.questions.*.options.*" => "required",
+            "sections.*.questions.*.options.*.name" => "required",
         ],[
             "title" => "Please write Form Title.",
             "description" => "Please write Form Description.",
@@ -42,12 +47,12 @@ class FormsController extends Controller
             "sections.*.questions.*.name" => "Please fill question text.",
             "sections.*.questions.*.type.required" => "Please choose question type.",
             "sections.*.questions.*.options.*.required" => "Please fill option value.",
+            "sections.*.questions.*.options.*.name.required" => "Pease fill option text",
         ]);
         // dd('Form saved successfully');
 
-        // dd($request->sections);
         DB::beginTransaction();
-        // try {
+        try {
             $user = Auth::user();
             $user_id = $user->id;
 
@@ -61,9 +66,10 @@ class FormsController extends Controller
                 'user_id'=> $user_id
             ]);
 
-            foreach($request->sections as $sectionIndex => $section){
-                $sectiontitle = $section["title"];
-                $sectiondescription = $section["description"];
+            dd($request->sections);
+            foreach($request->sections as $sectionIndex => $reqsection){
+                $sectiontitle = $reqsection["title"];
+                $sectiondescription = $reqsection["description"];
                 $section = Section::create([
                     'form_id' => $form->id,
                     'title' => $sectiontitle,
@@ -71,42 +77,41 @@ class FormsController extends Controller
                     // 'image',
                 ]);
 
-                foreach($section["questions"] ?? [] as $questionIndex => $question){
-
+                foreach($reqsection["questions"] ?? [] as $questionIndex => $reqquestion){
                     $question = Question::create([
                         'form_id' => $form->id,
                         'section_id' => $section->id,
-                        'name' => $question["name"],
-                        'type' => $question["type"],
+                        'name' => $reqquestion["name"],
+                        'type' => $reqquestion["type"],
                         'required' => true,
                         // 'image' => ,
                     ]);
 
-                    if (!empty($question['options'])){
-                        foreach ($question['options'] as $option){
+                    if (!empty($reqquestion['options'])){
+                        foreach ($reqquestion['options'] as $option){
                             $option = Option::create([
                                 'form_id'=> $form->id,
                                 'section_id'=> $section->id,
                                 'question_id' => $question->id,
-                                'name' => $option,
+                                'name' => $option['name'],
+                                'value' => $option['value'] ?? '',
                                 // 'image' => ,
                             ]);
                         }
                     }
                 }
             }
-
-            // DB::commit();
+            DB::commit();
             return redirect()->route('forms.index')
                 ->with('success', 'User created successfully');
-        // } catch (Exception $e){
-        //     DB::rollBack();
-        //     Log::debug($e->getMessage());
-        //     return redirect()
-        //         ->intended(route("forms.create"))
-        //         ->withInput()
-        //         ->with('error', 'Fail to create form!');
-        // }
+        } catch (Exception $e){
+            DB::rollBack();
+            Log::debug($e->getMessage());
+            return redirect()
+                ->intended(route("forms.create"))
+                ->withInput()
+                ->with('error', 'Fail to create form!');
+        }
 
 
 

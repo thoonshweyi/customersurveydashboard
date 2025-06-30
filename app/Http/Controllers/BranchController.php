@@ -13,7 +13,7 @@ class BranchController extends Controller
 {
     function __construct()
     {
-        $this->middleware('permission:view-branches', ['only' => ['index']]);
+        // $this->middleware('permission:view-branches', ['only' => ['index']]);
     }
 
     public function index(Request $request)
@@ -22,7 +22,7 @@ class BranchController extends Controller
             if ($request->ajax()) {
                 $branch_name =  (!empty($_GET["branch_name"])) ? ($_GET["branch_name"]) : ('');
                 $branch_short_name =  (!empty($_GET["branch_short_name"])) ? ($_GET["branch_short_name"]) : ('');
-    
+
                 $result =  Branch::query();
                 if ($branch_name != "") {
                     $result = $result->Where('branch_name', 'like', '%' . $branch_name . '%');
@@ -30,6 +30,11 @@ class BranchController extends Controller
                 if ($branch_short_name != "") {
                     $result = $result->Where('branch_short_name', 'like', '%' . $branch_short_name . '%');
                 }
+
+                if(!empty($request->retailbranch)){
+                    $result = $result->whereIn('branch_id',[1,2,3,9,10,11]);
+                }
+                 $result = $result->orderBy('branch_id',"asc");
                 return DataTables::of($result)->make(true);
             }
             return view('branches.index');
@@ -39,7 +44,7 @@ class BranchController extends Controller
                 ->intended(route("branches.index"))
                 ->with('error', 'Fail to load Data!');
         }
-       
+
     }
 
     public function create()

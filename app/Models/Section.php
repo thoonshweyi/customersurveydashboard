@@ -17,4 +17,13 @@ class Section extends Model
         'image',
     ];
 
+    public function questions()
+    {
+        return $this->hasMany(Question::class);
+    }
+
+    public function options()
+    {
+        return $this->hasMany(Option::class);
+    }
 }

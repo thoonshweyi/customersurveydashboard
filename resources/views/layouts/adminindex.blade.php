@@ -13,7 +13,7 @@
 
           <!-- Start Content Area -->
           <section>
-               <div class="container-fluid">
+               <div id="browsepath" class="container-fluid">
                     <div class="row">
                          <div class="col-lg-10 col-md-9 ms-auto pt-md-5 mt-mt-3">
                          <!-- Start Inner Content Area -->
@@ -37,9 +37,9 @@
                </div>
           </section>
           <!-- End Content Area -->
-          
+
      </div>
-         
+
 @include("layouts.adminfooter")
 
 
@@ -49,7 +49,7 @@
 {{-- <p>{{ \Request::getRequestUri() }}<p> --}}    {{-- /edulinks?filter=4&search=16 ( include all url and query behind domain /host name ) --}}
 {{-- <p>{{ \Request::getPathInfo() }}<p> --}}      {{-- /edulinks ( include all url behind domain /host name but not including query ) --}}
 {{-- <p>{{ \Request::path() }}<p> --}}             {{-- posts/1/edit ( include all url behind domain /host name but not including query ) --}}
-                    
+
 
 {{-- <p>{{ request()->root() }}<p> --}}             {{-- http://127.0.0.1:8000 --}}
 {{-- <p>{{ request()->fullURL() }}<p> --}}          {{-- http://127.0.0.1:8000/edulinks?filter=4&search=16 --}}
@@ -57,7 +57,7 @@
 {{-- <p>{{ request()->getRequestUri() }}<p> --}}    {{-- /edulinks?filter=4&search=16 ( include all url and query behind domain /host name ) --}}
 {{-- <p>{{ request()->getPathInfo() }}<p> --}}      {{-- /edulinks ( include all url behind domain /host name but not including query ) --}}
 {{-- <p>{{ request()->path() }}<p> --}}             {{-- posts/1/edit ( include all url behind domain /host name but not including query ) --}}
-                         
+
 {{-- /////////////////////////////////////////////////////////////////// --}}
 
 {{-- <p>{{ url()->full() }}<p> --}}                {{-- http://127.0.0.1:8000/edulinks?filter=4&search=16 --}}

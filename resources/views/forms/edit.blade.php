@@ -3,7 +3,7 @@
 @section("content")
 
      <!-- Start Page Content Area -->
-     <div class="container-fluid">
+     <div id="contentarea" class="container-fluid">
           <div class="col-md-12">
                 @if ($message = Session::get('error'))
                     <div class="alert alert-danger">
@@ -26,22 +26,32 @@
                     </ul>
                 </div>
                 @endif
+{{-- 
+                <div class="row" style="position: sticky;  top: 0;
+                                        background-color: green;
+                                        border: 2px solid #4CAF50;">
+                    <div class="col-md-12 text-end">
+                        <button type="button" class="btn btn-primary">Update</button>
+                    </div>
+                </div> --}}
+
                 <div class="container csform-container mt-0">
-                    <form action="{{ route("forms.store") }}" method="POST" enctype="multipart/form-data">
+                    <form id="updateform" action="{{ route("forms.update",$form['id']) }}" method="POST" enctype="multipart/form-data">
                         @csrf
+                        @method('PUT')
                         <div class="csform-header">
                             {{-- <h2 class="mb-2">Customer Satisfaction Survey</h2> --}}
                             <input
                             type="text"
                             class="form-control underline-only maintitle-input mb-2"
                             name="title"
-                            value="{{ old('title','Untitled form') }}"
+                            value="{{ old('title', $form['title']) }}"
                             />
                             <input
                             type="text"
                             class="form-control underline-only"
                             name="description"
-                            value="{{ old('description','') }}"
+                            value="{{ old('description', $form['description']) }}"
                             placeholder="Form description"
                             />
                         </div>
@@ -66,7 +76,169 @@
                                 // dd($oldSections);
                             @endphp
 
-                            @foreach ($oldSections as $sectionIndex => $section)
+                            {{-- @foreach ($oldSections as $sectionIndex => $section)
+                                <div class="section" data-section-index="{{ $sectionIndex }}" data-question-count="{{ count($section['questions'] ?? []) }}">
+                                    <div class="d-flex justify-content-between mt-2">
+                                        <h6 class="section-header m-0">Section {{ $sectionIndex + 1 }}</h6>
+                                    </div>
+
+                                    <div class="section-card">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <input
+                                                    type="text"
+                                                    id="section"
+                                                    name="sections[{{ $sectionIndex }}][title]"
+                                                    class="form-control underline-only title-input question"
+                                                    value="{{ $section['title'] ?? '' }}"
+                                                    placeholder="Section"
+                                                />
+                                            </div>
+                                            <div class="col-lg-12 mt-2">
+                                                <input
+                                                    type="text"
+                                                    name="sections[{{ $sectionIndex }}][description]"
+                                                    class="form-control underline-only option-input options"
+                                                    value="{{ $section['description'] ?? '' }}"
+                                                    placeholder="Section description"
+                                                />
+                                            </div>
+
+
+                                        </div>
+                                         <div class="toolboxs">
+                                                <a href="javascript:void(0)" class="toolboxitems add-btn"><i class="fas fa-plus-circle"></i></a>
+                                                <a href="javascript:void(0)" class="toolboxitems addsection-btn" title="Add Section">
+                                                    <i class="section-divider">
+                                                        <div class="divider-lines"></div>
+                                                        <div class="divider-lines"></div>
+                                                    </i>
+                                                </a>
+                                        </div>
+                                    </div>
+
+                                    <div class="question-container">
+                                        @foreach ($section['questions'] ?? [] as $questionIndex => $question)
+                                            <div class="csform-card mb-4" data-question-index="{{ $questionIndex }}" data-option-count="{{ count($question['options'] ?? []) }}">
+                                                <div class="row">
+                                                    <div class="col-md-8">
+                                                        <input
+                                                            type="text"
+                                                            id="question"
+                                                            name="sections[{{ $sectionIndex }}][questions][{{ $questionIndex }}][name]"
+                                                            class="form-control underline-only title-input question"
+                                                            value="{{ $question['name'] ?? '' }}"
+                                                            placeholder="Question"
+                                                        />
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <select name="sections[{{ $sectionIndex }}][questions][{{ $questionIndex }}][type]" class="form-select question_type">
+                                                            <option value="text" {{ ($question['type'] ?? '') == 'text' ? 'selected' : '' }}>Short Answer</option>
+                                                            <option value="textarea" {{ ($question['type'] ?? '') == 'textarea' ? 'selected' : '' }}>Paragraph</option>
+                                                            <option value="radio" {{ ($question['type'] ?? '') == 'radio' ? 'selected' : '' }}>Multiple Choice</option>
+                                                            <option value="checkbox" {{ ($question['type'] ?? '') == 'checkbox' ? 'selected' : '' }}>Checkboxes</option>
+                                                            <option value="selectbox" {{ ($question['type'] ?? '') == 'selectbox' ? 'selected' : '' }}>Dropdown</option>
+                                                            <option value="rating" {{ ($question['type'] ?? '') == 'rating' ? 'selected' : '' }}>Rating</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="col-lg-12 mt-2 option-container">
+                                                        @php
+                                                                $iconClass = 'far fa-circle'; // default icon
+                                                                $addOptionClass = '';
+                                                                $optiontext = '';
+
+                                                                switch ($question['type']) {
+                                                                    case 'checkbox':
+                                                                        $iconClass = 'far fa-square';
+                                                                        $addOptionClass = 'checkboxs';
+                                                                        break;
+                                                                    case 'selectbox':
+                                                                        $iconClass = 'fas fa-chevron-down';
+                                                                        $addOptionClass = 'selectboxs';
+                                                                        break;
+                                                                    case 'text':
+                                                                        $optiontext = "<small class='answer-text'>Short answer text</small>";
+                                                                        break;
+                                                                    case 'textarea':
+                                                                        $optiontext = "<small class='answer-text'>Long answer text</small>";
+                                                                        break;
+                                                                    case 'radio':
+                                                                        // Keep default
+                                                                        break;
+                                                                }
+                                                            @endphp
+
+                                                            @if (!empty($question['options']))
+                                                                @if($question['type'] != 'rating')
+                                                                    @foreach ($question['options'] as $optionIndex =>$option)
+                                                                        <div class="d-flex align-items-center mb-2">
+                                                                            <i class="{{ $iconClass }} text-secondary fa-sm"></i>
+                                                                            <input
+                                                                                type="text"
+                                                                                id="options"
+                                                                                name="sections[{{ $sectionIndex }}][questions][{{ $questionIndex }}][options][{{$optionIndex}}][name]"
+                                                                                class="form-control underline-only option-input options"
+                                                                                value="{{ $option['name'] ?? '' }}"
+                                                                                placeholder="Option"
+                                                                            />
+                                                                            <input type="hidden" name="sections[{{ $sectionIndex }}][questions][{{ $questionIndex }}][options][{{$optionIndex}}][value]" value="{{ $option['value'] ?? '' }}"/>
+                                                                        </div>
+                                                                    @endforeach
+                                                                    <div class="d-flex align-items-center">
+                                                                        <i class="{{ $iconClass }} text-secondary fa-sm"></i>
+                                                                        <a class="add-option {{ $addOptionClass }}" href="javascript:void(0)">Add Option</a>
+                                                                        <span>or</span>
+                                                                        <a href="#importmodal" data-bs-toggle='modal' class="importmodalbtn">Import Questions</a>
+                                                                    </div>
+                                                                @elseif ($question['type'] == 'rating')
+                                                                    <div class="d-flex justify-content-around align-items-center mb-2">
+                                                                            @foreach ($question['options'] as $optionIndex =>$option)
+                                                                            <div class="text-center">
+                                                                                <div class="form-group">
+                                                                                        <label>{{$optionIndex + 1}}</label>
+                                                                                        <input
+                                                                                            type="hidden"
+                                                                                            id="options"
+                                                                                            name="sections[{{ $sectionIndex }}][questions][{{ $questionIndex }}][options][{{$optionIndex}}][name]"
+                                                                                            class="form-control underline-only option-input options"
+                                                                                            placeholder="Option"
+                                                                                            value = "{{$optionIndex + 1}}"
+                                                                                        />
+                                                                                        <input type="hidden" name="sections[{{ $sectionIndex }}][questions][{{ $questionIndex }}][options][{{$optionIndex}}][value]" value="{{$optionIndex + 1}}" />
+                                                                                </div>
+                                                                                <i class="far fa-star text-secondary fa-sm"></i>
+                                                                            </div>
+                                                                            @endforeach
+                                                                    </div>
+                                                                @endif
+
+                                                            @else
+                                                                {!! $optiontext !!}
+                                                            @endif
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="toolboxs">
+                                                    <a href="javascript:void(0)" class="toolboxitems add-btn"><i class="fas fa-plus-circle"></i></a>
+                                                    <a href="javascript:void(0)" class="toolboxitems remove-btns"><i class="fas fa-trash-alt fa-sm text-danger"></i></a>
+                                                    <a href="javascript:void(0)" class="toolboxitems"><i class="fas fa-copy"></i></a>
+                                                    <a href="javascript:void(0)" class="toolboxitems addsection-btn" title="Add Section">
+                                                        <i class="section-divider">
+                                                            <div class="divider-lines"></div>
+                                                            <div class="divider-lines"></div>
+                                                        </i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endforeach --}}
+
+
+                            @foreach ($form['sections'] as $sectionIndex => $section)
                                 <div class="section" data-section-index="{{ $sectionIndex }}" data-question-count="{{ count($section['questions'] ?? []) }}">
                                     <div class="d-flex justify-content-between mt-2">
                                         <h6 class="section-header m-0">Section {{ $sectionIndex + 1 }}</h6>
@@ -227,10 +399,12 @@
                                 </div>
                             @endforeach
 
+
                         </div>
 
                         <div>
-                            <button type="submit" class="btn btn-sm btn-primary">Submit</button>
+                            <a href="{{ route('forms.index') }}" class="btn btn-sm btn-secondary">Back</a>
+                            <button type="button" id="update-btn" class="btn btn-sm btn-primary ">Updadte</button>
                         </div>
 
                     </form>
@@ -861,6 +1035,27 @@
                 });
                 {{-- End Remove Btn --}}
 
+
+                {{-- Start Update Btn --}}
+
+                $('#update-btn').click(function(){
+
+                    Swal.fire({
+                         title: "Are you sure?",
+                         text: `You form data will be updated.`,
+                         icon: "warning",
+                         showCancelButton: true,
+                         confirmButtonColor: "#3085d6",
+                         cancelButtonColor: "#d33",
+                         confirmButtonText: "Yes, update it!"
+                    }).then((result) => {
+                         if (result.isConfirmed) {
+                            $('#updateform').submit();
+                         }
+                    });
+
+                });
+                {{-- End Updadte Btn --}}
           });
      </script>
 @endsection

@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Form extends Model
 {
     use HasFactory;
+    use SoftDeletes;
+
     protected $table = "forms";
     protected $primaryKey = "id";
     protected $fillable = [
@@ -25,5 +28,20 @@ class Form extends Model
 
     public function status(){
         return $this->belongsTo(Status::class);
+    }
+
+    public function sections()
+    {
+        return $this->hasMany(Section::class);
+    }
+
+    public function questions()
+    {
+        return $this->hasMany(Question::class);
+    }
+
+    public function options()
+    {
+        return $this->hasMany(Option::class);
     }
 }

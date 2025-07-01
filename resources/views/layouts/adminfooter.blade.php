@@ -1,5 +1,5 @@
 <!-- Start Footer Section -->
-<footer class="footers">
+<footer id="footer" class="footers">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-10 col-md-8 ms-auto">
@@ -94,10 +94,14 @@
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/justgage/1.2.9/justgage.min.js"></script> --}}
 
         <!-- toastr css1 js1 -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" type="text/javascript"></script>
+        {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" type="text/javascript"></script> --}}
 
         {{-- select css1 js1 --}}
         <script src="{{ asset('assets/libs/select2/select2.min.js') }}" type="text/javascript"></script>
+
+        {{-- sweetalert2 css1 js1 --}}
+        <script src="{{ asset('assets/libs/sweetalert2/sweetalert2.min.js') }}" type="text/javascript"></script>
+
 
         <script>
                 toastr.options = {

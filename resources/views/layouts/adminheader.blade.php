@@ -25,6 +25,11 @@
         {{-- select css1 js1 --}}
         <link href="{{ asset('assets/libs/select2/select2.min.css') }}" rel="stylesheet" />
 
+
+        {{-- sweetalert2 css1 js1 --}}
+        <link href="{{ asset('assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" />
+
+
         <!-- custom css css1 -->
         <link href="{{ asset('assets/dist/css/style.css') }}" rel="stylesheet" type="text/css"/>
 

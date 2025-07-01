@@ -18,4 +18,10 @@ class Question extends Model
         'required',
         'image',
     ];
+
+
+    public function options()
+    {
+        return $this->hasMany(Option::class);
+    }
 }

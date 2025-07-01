@@ -624,3 +624,13 @@
 // 	// return 'hay'
 // }
 // {/* <a href="javascript:void(0);" class="fw-bold mt-1" onclick="window.location.href = '/posts/${post.id}'">${post.title}</a> */}
+
+
+
+const footer = document.getElementById('footer');
+const content = document.getElementById('contentarea');
+
+function setFooterPadding() {
+  const footerHeight = footer.offsetHeight;
+  content.style.setProperty('--footer-height', `${footerHeight}px`);
+}

@@ -9,6 +9,7 @@ body{
     font-family: 'Source Sans Pro', sans-serif;
     font-size: 18px;
     background-color: #f4f4f4;
+    position: relative;
 }
 
 /* Start Site Setting */
@@ -222,6 +223,12 @@ body.show-nav > .right-panels{
 }
 /* End Right Navbar */
 
+/* Start Content */
+#contentarea {
+  padding-bottom: var(--footer-height, 60px); /* default fallback */
+}
+/* End Content */
+
 /* Start Footer */
 .footers{
     width:100%;
@@ -417,3 +424,6 @@ a {
 	text-decoration: none;
 } */
 /* End Customer Survey Form */
+
+
+

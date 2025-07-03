@@ -1,21 +1,21 @@
 // // $(document).ready(function(){
 
-// // 		// Start Left Side Bar
-// // 		$(".sidebarlinks").click(function(){
-// // 				$(".sidebarlinks").removeClass("currents");
-// // 				$(this).addClass("currents");
-// // 		});
-// // 		// End Left Side Bar
+		// Start Left Side Bar
+		$(".sidebarlinks").click(function(){
+				$(".sidebarlinks").removeClass("currents");
+				$(this).addClass("currents");
+		});
+		// End Left Side Bar
 // // });
 
 // // Start Js Area
 
 
 // // Start Site Setting
-// const getsitesettings = document.getElementById("sitesettings");
-// getsitesettings.addEventListener("click",function(){
-// 	document.body.classList.toggle("show-nav");
-// });
+const getsitesettings = document.getElementById("sitesettings");
+getsitesettings.addEventListener("click",function(){
+	document.body.classList.toggle("show-nav");
+});
 // // End Site Setting
 
 // // Start Top Sidebar

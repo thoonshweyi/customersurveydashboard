@@ -26,7 +26,7 @@
                     </ul>
                 </div>
                 @endif
-{{-- 
+{{--
                 <div class="row" style="position: sticky;  top: 0;
                                         background-color: green;
                                         border: 2px solid #4CAF50;">
@@ -562,7 +562,7 @@
 
                {{-- Start Add Section Btn --}}
                @php
-                    $sectioncount = count(old('sections', []));
+                    $sectioncount = count(old('sections', $form['sections']));
                @endphp
                let sectionIndex = {{ $sectioncount }};
                 $(document).on("click", ".addsection-btn", function () {

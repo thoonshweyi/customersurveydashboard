@@ -11,6 +11,7 @@ use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\DashboardsController;
 use App\Http\Controllers\PermissionsController;
 use App\Http\Controllers\PermissionRolesController;
+use App\Http\Controllers\SurveyResponsesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,6 +55,8 @@ Route::middleware('auth')->group(function () {
     Route::delete("/roleusersbulkdeletes",[RoleUsersController::class,"bulkdeletes"])->name("roleusers.bulkdeletes");
 
     Route::resource('forms',FormsController::class);
+    Route::resource('surveyresponses',SurveyResponsesController::class);
+    Route::get('surveyresponsesdashboard',[SurveyResponsesController::class,"dashboard"])->name("surveyresponsesdashboard");
 
 });
 

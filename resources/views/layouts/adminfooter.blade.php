@@ -104,10 +104,10 @@
 
 
         <script>
-                toastr.options = {
+                {{-- toastr.options = {
                     "progressBar":true,
                     "closeButton":true
-                };
+                }; --}}
         </script>
 
             @if(Session::has("success"))

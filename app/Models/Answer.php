@@ -16,4 +16,9 @@ class Answer extends Model
         'option_id',
         'text',
     ];
+
+    public function option(){
+        return $this->belongsTo(Option::class,"option_id","id");
+    }
+
 }

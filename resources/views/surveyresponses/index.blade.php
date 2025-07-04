@@ -44,7 +44,10 @@
                               <td>{{ \Carbon\Carbon::parse($surveyresponse->submitted_at)->format('d M Y h:i:s') }}</td>
                               {{-- <td>{{ $surveyresponse->created_at->format('d M Y') }}</td>
                               <td>{{ $surveyresponse->updated_at->format('d M Y') }}</td> --}}
-                              <td>{{ $surveyresponse->respondent()['name'] ?? '' }}
+                              <td>{{
+                                    $surveyresponse->respondent()['name'] ?? 'Unknown'
+                                }}
+                                <span class="d-block">{{$surveyresponse->respondent()['phone'] ?? 'No Phone'}}</span>
                               </td>
                               <td>
                                     <a href="{{ route('surveyresponses.show',$surveyresponse->id) }}" class="text-info" ><i class="fas fa-eye"></i></a>

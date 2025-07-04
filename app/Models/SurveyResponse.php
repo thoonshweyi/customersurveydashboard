@@ -41,16 +41,25 @@ class SurveyResponse extends Model
                 ->whereIn(\DB::raw('LOWER(name)'), $keywords)
                 ->pluck("name",'id');
 
-            // dd($question_ids);
+            // dd($question_arr);
 
             foreach($question_arr as $question_id=>$question_name){
                 $answer = $this->answers()->where("question_id",$question_id)->first();
+                // dd($answer);
                 $respondent[Str::snake($question_name)] = $answer?->text ?? $answer?->option?->name;
             }
+            // dd($respondent);
             return $respondent;
         } catch (Exception $e) {
             Log::debug($e->getMessage());
         }
+
+    }
+
+    public function questionanswers($question_id){
+        $answers = $this->answers()->where("question_id",$question_id)->get();
+        // dd($answers);
+        return $answers;
 
     }
 

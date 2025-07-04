@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Form;
 use Illuminate\Http\Request;
 use App\Models\SurveyResponse;
 
@@ -30,5 +31,13 @@ class SurveyResponsesController extends Controller
         $surveyresponses = $results->orderBy("created_at","desc")->paginate(10);
 
         return view("surveyresponses.index",compact('surveyresponses'));
+    }
+
+    public function show(string $id) {
+        $surveyresponse = SurveyResponse::find($id);
+        $form = Form::find($surveyresponse->form_id);
+        // dd($form);
+
+        return view("surveyresponses.show",compact("surveyresponse","form"));
     }
 }

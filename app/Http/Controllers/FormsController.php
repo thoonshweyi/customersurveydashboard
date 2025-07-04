@@ -159,7 +159,7 @@ class FormsController extends Controller
         // dd($formattedForm);
 
 
-        return view("forms.edit",compact('optionimporttables'))->with("statuses",$statuses)->with("form",$formattedForm);
+        return view("forms.edit",compact('form','optionimporttables'))->with("statuses",$statuses)->with("formattedForm",$formattedForm);
     }
 
 

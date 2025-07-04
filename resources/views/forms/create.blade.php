@@ -3,7 +3,7 @@
 @section("content")
 
      <!-- Start Page Content Area -->
-     <div class="container-fluid">
+     <div id="contentarea" class="container-fluid">
           <div class="col-md-12">
                 @if ($message = Session::get('error'))
                     <div class="alert alert-danger">

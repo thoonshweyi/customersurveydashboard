@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Exception;
 use Carbon\Carbon;
 use App\Models\Answer;
+use App\Models\Question;
 use Illuminate\Http\Request;
 use App\Models\SurveyResponse;
 use Illuminate\Support\Facades\DB;
@@ -45,17 +46,16 @@ class SurveyResponsesController extends Controller
             return response()->json(["errors"=>$validator->errors()],422);
         }
 
-
-        $surveyresponse = SurveyResponse::create([
-            'form_id' => $request->form_id,
-            'branch_id' => $request->branch_id,
-            'submitted_at' => Carbon::now()
-        ]);
-
         DB::beginTransaction();
         try{
+            $surveyresponse = SurveyResponse::create([
+                'form_id' => $request->form_id,
+                'branch_id' => $request->branch_id,
+                'submitted_at' => Carbon::now()
+            ]);
 
             foreach ($request->questionanswers as $questionId => $answerData) {
+                $question = Question::find($questionId);
                 if (is_array($answerData)) {
                     foreach ($answerData as $optionId) {
                         Answer::create([
@@ -64,8 +64,7 @@ class SurveyResponsesController extends Controller
                             'option_id' => $optionId,
                         ]);
                     }
-                } elseif (is_numeric($answerData)) {
-                    // Assume it's a selected option
+                } elseif (is_numeric($answerData) && $question->type != 'text' && $question->type != 'textarea') {
                     Answer::create([
                         'survey_response_id' => $surveyresponse->id,
                         'question_id' => $questionId,

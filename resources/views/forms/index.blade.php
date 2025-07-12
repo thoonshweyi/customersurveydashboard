@@ -46,7 +46,8 @@
                                    <td>{{++$idx}}</td>
                                    <td>
                                         {{-- <img src="{{ asset($form->image) }}" class="rounded-circle" alt="{{$form->name}}" width="20" height="20"/> --}}
-                                        <a href="{{route('forms.show',$form->id)}}">{{$form->title}}</a></td>
+                                        {{-- <a href="{{route('forms.show',$form->id)}}">{{$form->title}}</a></td> --}}
+                                        <a href="javascript:void(0);">{{$form->title}}</a></td>
                                    <td>{{ $form->status->name }}</td>
                                    <td>{{ $form->user["name"] }}</td>
                                    <td>{{ $form->created_at->format('d M Y') }}</td>

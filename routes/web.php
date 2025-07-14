@@ -56,7 +56,10 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('forms',FormsController::class);
     Route::resource('surveyresponses',SurveyResponsesController::class);
-    Route::get('surveyresponsesdashboard',[SurveyResponsesController::class,"dashboard"])->name("surveyresponsesdashboard");
+    Route::get('surveyresponsesdashboard/{form_id}',[SurveyResponsesController::class,"dashboard"])->name("surveyresponsesdashboard");
+    Route::get('surveyresponsesexport/{form_id}',[SurveyResponsesController::class,"export"])->name("surveyresponsesexport");
+
+
 
 });
 

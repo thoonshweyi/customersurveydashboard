@@ -2,18 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Form;
 use Illuminate\Http\Request;
 use App\Models\SurveyResponse;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\SurveyResponsesExport;
 
 class SurveyResponsesController extends Controller
 {
 
-    public function dashboard(){
+    public function dashboard($form_id){
         $summaries = SurveyResponse::select('branch_id')
         ->selectRaw('COUNT(*) as total')
         ->groupBy('branch_id')
         ->with('branch')
+        ->where('form_id',$form_id)
         ->get();
 
         return view("surveyresponses.dashboard",compact('summaries'));
@@ -39,5 +43,16 @@ class SurveyResponsesController extends Controller
         // dd($form);
 
         return view("surveyresponses.show",compact("surveyresponse","form"));
+    }
+
+    public function export(Request $request,$form_id){
+
+        $results = SurveyResponse::query();
+        $surveyresponses = $results->get();
+        // dd($surveyresponses);
+        $response = Excel::download(new SurveyResponsesExport($surveyresponses,$form_id), "SurveyResponses".Carbon::now()->format('Y-m-d').".xlsx");
+
+        return $response;
+
     }
 }

@@ -121,7 +121,7 @@
                             <li class="nav-item"><a href="javascript:void(0);" class="nav-link text-white p-3 mb-2 sidebarlinks currents" data-bs-toggle="collapse" data-bs-target="#customermanagement"><i class="fas fa-users"></i> Customer Management <i class="fas fa-angle-right mores"></i></a>
                                 <ul id="customermanagement" class="collapse ps-4">
                                     <li><a href="{{route('forms.index')}}" class="nav-link text-white sidebarlinks"><i class="fas fa-long-arrow-alt-right me-4"></i>  Form</a></li>
-                                    <li><a href="{{route('surveyresponsesdashboard')}}" class="nav-link text-white sidebarlinks"><i class="fas fa-long-arrow-alt-right me-4"></i>  Survey Response</a></li>
+                                    <li><a href="{{route('surveyresponsesdashboard',1)}}" class="nav-link text-white sidebarlinks"><i class="fas fa-long-arrow-alt-right me-4"></i>  Survey Response</a></li>
                                 </ul>
                             </li>
 

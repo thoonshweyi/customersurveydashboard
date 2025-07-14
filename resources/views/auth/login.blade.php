@@ -2,6 +2,10 @@
 <div id="app">
     <div class="vh-100 d-flex justify-content-center align-items-center">
         <div class="bg-white p-4 rounded">
+            <div class="text-center">
+                <img src="{{ asset('assets/imgs/icons/customersurveyicon.png') }}" alt="customersurveyicon" width="100px" />
+            </div>
+
             <h5>Sign In</h5>
 
             <form class="mt-3" action="{{ route('login') }}" method="POST">

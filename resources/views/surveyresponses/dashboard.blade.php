@@ -25,6 +25,8 @@
                     <h4>Survey Responses By Branch</h4>
                 </div>
                 <div class="card-body">
+
+                    <a href="{{ route('surveyresponsesexport',1) }}" class="btn btn-primary my-2">Export</a>
                     <div class="table-responsive">
                         <table id="" class="table table-sm table-hover border">
                                 <thead class="thead-dark">

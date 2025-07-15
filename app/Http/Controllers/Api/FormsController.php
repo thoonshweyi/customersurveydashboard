@@ -36,18 +36,18 @@ class FormsController extends Controller
             'id' => $form->id,
             'title' => $form->title,
             'description' => $form->description,
-            'sections' => $form->sections->map(function ($section) {
+            'sections' => $form->sections()->orderBy("id",'asc')->get()->map(function ($section) {
                 return [
                     'id' => $section->id,
                     'title' => $section->title,
                     'description' => $section->description,
-                    'questions' => $section->questions->map(function ($question) {
+                    'questions' => $section->questions()->orderBy("id",'asc')->get()->map(function ($question) {
                         return [
                             'id' => $question->id,
                             'name' => $question->name,
                             'type' => $question->type,
                             'required' => $question->required,
-                            'options' => $question->options->map(function ($option) {
+                            'options' => $question->options()->orderBy("id",'asc')->get()->map(function ($option) {
                                 return [
                                     'id' => $option->id,
                                     'name' => $option->name,

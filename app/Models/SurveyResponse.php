@@ -60,7 +60,6 @@ class SurveyResponse extends Model
         $answers = $this->answers()->where("question_id",$question_id)->get();
         // dd($answers);
         return $answers;
-
     }
 
 

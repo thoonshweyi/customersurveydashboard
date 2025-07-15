@@ -27,10 +27,16 @@ class SurveyResponsesController extends Controller
         $results = SurveyResponse::query();
 
         $branch_id = $request->branch_id;
+        $form_id = $request->form_id;
         // dd($branch_id);
         if(!empty($branch_id)){
             $results = $results->where("branch_id",$branch_id);
         }
+
+        if(!empty($form_id)){
+            $results = $results->where("form_id",$form_id);
+        }
+
 
         $surveyresponses = $results->orderBy("created_at","desc")->paginate(10);
 
@@ -48,6 +54,18 @@ class SurveyResponsesController extends Controller
     public function export(Request $request,$form_id){
 
         $results = SurveyResponse::query();
+
+        $branch_id = $request->branch_id;
+        if(!empty($branch_id)){
+            $results = $results->where("branch_id",$branch_id);
+        }
+
+        // if(!empty($form_id)){
+        //     $results = $results->where("form_id",$form_id);
+        // }
+
+
+        $results = $results->where("form_id",$form_id);
         $surveyresponses = $results->get();
         // dd($surveyresponses);
         $response = Excel::download(new SurveyResponsesExport($surveyresponses,$form_id), "SurveyResponses".Carbon::now()->format('Y-m-d').".xlsx");

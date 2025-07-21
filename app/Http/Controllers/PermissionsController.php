@@ -7,7 +7,7 @@ use App\Models\Permission;
 use App\Models\Status;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
- 
+
 
 class PermissionsController extends Controller
 {
@@ -38,14 +38,24 @@ class PermissionsController extends Controller
        $user = Auth::user();
        $user_id = $user->id;
 
+
+
        $permission = new Permission();
        $permission->name = $request["name"];
        $permission->status_id = $request["status_id"];
        $permission->slug = Str::slug($request["name"]);
        $permission->user_id = $user_id;
 
-       $permission->save();
-       return redirect(route("permissions.index"));
+        $name = $request->name;
+        $parts = explode('_', $name, 2);
+        if(count($parts) < 2){
+            return redirect()->back();
+        }
+        $lastWord = end($parts);
+        $permission->group_name = $lastWord;
+
+        $permission->save();
+        return redirect(route("permissions.index"));
     }
 
 
@@ -80,7 +90,7 @@ class PermissionsController extends Controller
         $permission = Permission::findOrFail($request["id"]);
         $permission->status_id = $request["status_id"];
         $permission->save();
-    
+
         return response()->json(["success"=>"Status Change Successfully"]);
     }
 
@@ -96,5 +106,5 @@ class PermissionsController extends Controller
         }
     }
 
-    
+
 }

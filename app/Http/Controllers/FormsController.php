@@ -19,11 +19,13 @@ class FormsController extends Controller
 {
     public function index()
     {
+            $this->authorize('view',Form::class);
         $forms = Form::paginate(10);
         return view("forms.index",compact("forms"));
     }
     public function create()
     {
+            $this->authorize('create',Form::class);
         $optionimporttables = ["branches", "categories"];
         $branches = Branch::all();
         return view("forms.create",compact("optionimporttables","branches"));
@@ -60,6 +62,8 @@ class FormsController extends Controller
 
             $title = $request->title;
             $description = $request->description;
+
+                $this->authorize('create',Form::class);
             $form = Form::create([
                 'title'=>$title,
                 'slug'=> Str::slug($title),
@@ -121,6 +125,8 @@ class FormsController extends Controller
 
 
     public function edit(Form $form){
+            $this->authorize('edit',$form);
+
         $statuses = Status::whereIn("id",[1,2])->get();
         $optionimporttables = ["branches", "categories"];
 
@@ -133,18 +139,18 @@ class FormsController extends Controller
             'id' => $form->id,
             'title' => $form->title,
             'description' => $form->description,
-            'sections' => $form->sections->map(function ($section) {
+            'sections' => $form->sections()->orderBy("id",'asc')->get()->map(function ($section) {
                 return [
                     'id' => $section->id,
                     'title' => $section->title,
                     'description' => $section->description,
-                    'questions' => $section->questions->map(function ($question) {
+                    'questions' => $section->questions()->orderBy("id",'asc')->get()->map(function ($question) {
                         return [
                             'id' => $question->id,
                             'name' => $question->name,
                             'type' => $question->type,
                             'required' => $question->required,
-                            'options' => $question->options->map(function ($option) {
+                            'options' => $question->options()->orderBy("id",'asc')->get()->map(function ($option) {
                                 return [
                                     'id' => $option->id,
                                     'name' => $option->name,
@@ -189,6 +195,7 @@ class FormsController extends Controller
         DB::beginTransaction();
         try {
             $form = Form::findOrFail($id);
+                $this->authorize('edit',$form);
             $form->update([
                 'title' => $request->title,
                 'slug' => Str::slug($request->title),

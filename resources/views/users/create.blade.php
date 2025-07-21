@@ -97,6 +97,7 @@
                                 <div class="form-group">
                                     <strong>{{ __('user.role') }}:</strong>
                                     <select id="roles" name="roles[]" class="form-control">
+                                    <option value="" selected disabled>-- Select Role --</option>
                                         @foreach($roles as $key => $role)
                                             <option value="{{ $key }}">{{ $role }}</option>
                                         @endforeach

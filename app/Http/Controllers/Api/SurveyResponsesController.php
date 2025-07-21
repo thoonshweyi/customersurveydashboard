@@ -112,4 +112,21 @@ class SurveyResponsesController extends Controller
     {
         //
     }
+
+
+    public function dashboard($form_id){
+        $totalsurveyresponses = SurveyResponse::where('form_id',$form_id)->count();
+        $totalresponsebranches = SurveyResponse::select('branch_id')
+                                        ->selectRaw('COUNT(*) as total')
+                                        ->groupBy('branch_id')
+                                        ->with('branch')
+                                        ->where('form_id',$form_id)
+                                        ->pluck('total', 'branch_id')
+                                        ->count();
+        return response()->json([
+            "totalresponsebranches" => $totalresponsebranches,
+            "totalsurveyresponses" => $totalsurveyresponses,
+            "contactsurveyresponses"=> $totalsurveyresponses
+        ]);
+    }
 }

@@ -2,7 +2,7 @@
 
 @section("caption","Role List")
 @section("content")
-                         
+
      <!-- Start Page Content Area -->
      <div class="container-fluid">
           <div class="col-md-12">
@@ -26,10 +26,10 @@
                          </div>
                     </form>
                </div>
-               
+
                <div class="col-md-12">
                     <table id="mytable" class="table table-sm table-hover border">
-                    
+
                          <thead>
                               <th>No</th>
                               <th>Name</th>
@@ -45,8 +45,8 @@
                               <tr>
                                    <td>{{++$idx}}</td>
                                    <td>
-                                        <img src="{{ asset($role->image) }}" class="rounded-circle" alt="{{$role->name}}" width="20" height="20"/> 
-                                        <a href="{{route('roles.show',$role->slug)}}">{{$role->name}}</a></td>
+                                        <img src="{{ asset($role->image) }}" class="rounded-circle" alt="{{$role->name}}" width="20" height="20"/>
+                                        <a href="{{route('roles.show',$role->id)}}">{{$role->name}}</a></td>
                                    <td>{{ $role->status->name }}</td>
                                    <td>{{ $role->user["name"] }}</td>
                                    <td>{{ $role->created_at->format('d M Y') }}</td>
@@ -66,7 +66,7 @@
                     </table>
                     {{ $roles->links("pagination::bootstrap-4") }}
                </div>
-          
+
 
           </div>
      </div>
@@ -87,8 +87,8 @@
                let getcururl = window.location.href;
                // console.log(getcururl); // http://127.0.0.1:8000/cities?filtername=yan
                // console.log(getcururl.split("?")); // ['http://127.0.0.1:8000/cities', 'filtername=yan']
-               // console.log(getcururl.split("?")[0]); // 
-               
+               // console.log(getcururl.split("?")[0]); //
+
                window.location.href = getcururl.split("?")[0] + "?filterstatus_id="+getstatusid;
 
                e.preventDefault();
@@ -99,7 +99,7 @@
           $(document).ready(function(){
                $(".delete-btns").click(function(){
                     // console.log('hay');
-          
+
                     var getidx = $(this).data("idx");
                     // console.log(getidx);
 

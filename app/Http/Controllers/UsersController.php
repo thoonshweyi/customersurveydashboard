@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use App\Models\User;
 use App\Models\Branch;
+use App\Models\RoleUser;
+use App\Models\BranchUser;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Rules\MatchOldPassword;
 use Illuminate\Support\Facades\DB;
-use App\Models\Role;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use App\Models\BranchUser;
 use Illuminate\Support\Facades\Hash;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -101,7 +102,7 @@ class UsersController extends Controller
     {
         try {
             $branches = Branch::where('branch_active',true)->get();
-            $roles = Role::pluck('name', 'name')->all();
+            $roles = Role::pluck('name', 'id')->all();
             return view('users.create', compact('roles', 'branches'));
         } catch (\Exception $e) {
             Log::debug($e->getMessage());
@@ -137,7 +138,14 @@ class UsersController extends Controller
                 BranchUser::create($userBranch);
             }
 
-            // $user->assignRole($request->input('roles'));
+             // Assign Role
+            $roles = $request->roles;
+            foreach($roles as $role){
+                $roleuser = new RoleUser();
+                $roleuser->role_id = $role;
+                $roleuser->user_id = $user_id;
+                $roleuser->save();
+            }
 
             DB::commit();
             return redirect()->route('users.index')
@@ -170,8 +178,8 @@ class UsersController extends Controller
         try {
             $branches = Branch::get();
             $user = User::find($id);
-            $roles = Role::pluck('name', 'name')->all();
-            $userRole = $user->roles->pluck('name', 'name')->all();
+            $roles = Role::pluck('name', 'id')->all();
+            $userRole = $user->roles->pluck('id')->all();
             $userBranches = BranchUser::where('user_id',$user->id)->pluck('branch_id')->toArray();
             return view('users.edit', compact('user', 'roles', 'userRole', 'branches','userBranches'));
         } catch (\Exception $e) {
@@ -202,15 +210,23 @@ class UsersController extends Controller
             unset($input['branch_id']);
             $user = User::find($id);
             $user->update($input);
-            DB::table('model_has_roles')->where('model_id', $id)->delete();
             $user_id = $user->id;
             DB::table('branch_users')->where('user_id', $user_id)->delete();
             $branch_ids = $request->branch_id;
-            $user->assignRole($request->input('roles'));
             foreach ($branch_ids  as $branch_id) {
                 $userBranch['user_id'] = $user_id;
                 $userBranch['branch_id'] = $branch_id;
                 BranchUser::create($userBranch);
+            }
+
+            // Assign Role
+            $roles = $request->roles;
+            DB::table('role_users')->where('user_id', $user_id)->delete();
+            foreach($roles as $role){
+                $roleuser = new RoleUser();
+                $roleuser->role_id = $role;
+                $roleuser->user_id = $user_id;
+                $roleuser->save();
             }
 
             return redirect()->route('users.index')

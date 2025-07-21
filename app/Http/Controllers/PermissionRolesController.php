@@ -12,7 +12,7 @@ use App\Models\PermissionRole;
 use App\Models\Status;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
- 
+
 
 class PermissionRolesController extends Controller
 {
@@ -40,7 +40,7 @@ class PermissionRolesController extends Controller
         ]);
 
         $role = Role::findOrFail($request["role_id"]);
-        $role->permissions()->sync($request['permission_id']);
+        $role->permissions()->syncWithoutDetaching($request['permission_id']);
 
         return redirect(route("permissionroles.index"));
     }

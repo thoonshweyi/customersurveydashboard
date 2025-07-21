@@ -147,7 +147,7 @@
                         </div>
 
                         <div>
-                            <a href="{{ route('surveyresponsesdashboard') }}" class="btn btn-sm btn-secondary">Back</a>
+                            <a href="javascript:void(0)" class="btn btn-sm btn-secondary" onclick=" window.history.back();">Back</a>
                         </div>
 
                 </div>

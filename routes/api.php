@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\FormsController;
+use App\Http\Controllers\Api\BranchesController;
 use App\Http\Controllers\Api\SurveyResponsesController;
 
 /*
@@ -22,5 +23,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::apiResource("forms",FormsController::class,["as"=>"api"]);
 Route::apiResource("surveyresponses",SurveyResponsesController::class,["as"=>"api"]);
+Route::get("/surveyresponsesdashboard/{form_id}",[SurveyResponsesController::class,"dashboard"]);
+Route::get("/branchesdashboard",[BranchesController::class,"dashboard"]);
+
 
 

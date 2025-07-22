@@ -77,7 +77,34 @@
                                                     @endif
 
                                                     @if(!in_array($question->type, ['text','textarea']))
+                                                        @if(in_array($question->type,['rating']))
+                                                        <div id="avgrating-{{$question->id}}" class="avgrating">
+
+                                                            <h6 class="text-center fw-bold">Average rating (4.00)</h6>
+                                                            <div  class="d-flex justify-content-around align-items-center mb-2">
+                                                                @foreach ($question['options'] as $optionIndex =>$option)
+                                                                    @php
+                                                                        // $selected = $questionanswer->option->value;
+                                                                        // $starValue = $option->value;
+
+                                                                        $selected = 4;
+                                                                        $starValue = $option->value;
+                                                                    @endphp
+                                                                    <div  class="text-center">
+                                                                        <div class="form-group">
+                                                                                <label>{{ $option->name }}</label>
+                                                                        </div>
+                                                                        <i
+                                                                        class="{{ $selected >= $starValue ? "fas" : "far"  }} fa-star text-warning"
+                                                                        ></i>
+                                                                    </div>
+                                                                @endforeach
+
+                                                            </div>
+                                                        </div>
+                                                        @endif
                                                         <div class="d-flex justify-self-center" style="width: 40%; justify-self: center"> <canvas id="chart-{{$question->id}}" style="display:none;" width="250"></canvas></div>
+
                                                     @endif
 
                                                     {{-- @if($question->type == 'checkbox' || $question->type == 'radio' )

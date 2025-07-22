@@ -290,9 +290,36 @@ class FormsController extends Controller
     public function report(Request $request,$id){
 
         $form = Form::find($id);
-        // dd($form);
-
-        return view("forms.report",compact("form"));
+        $formattedForm = [
+            'id' => $form->id,
+            'title' => $form->title,
+            'description' => $form->description,
+            'sections' => $form->sections()->orderBy("id",'asc')->get()->map(function ($section) {
+                return [
+                    'id' => $section->id,
+                    'title' => $section->title,
+                    'description' => $section->description,
+                    'questions' => $section->questions()->orderBy("id",'asc')->get()->map(function ($question) {
+                        return [
+                            'id' => $question->id,
+                            'name' => $question->name,
+                            'type' => $question->type,
+                            'required' => $question->required,
+                            'options' => $question->options()->orderBy("id",'asc')->get()->map(function ($option) {
+                                return [
+                                    'id' => $option->id,
+                                    'name' => $option->name,
+                                    'value' => $option->value,
+                                ];
+                            })->toArray(),
+                        ];
+                    })->toArray(),
+                ];
+            })->toArray(),
+        ];
+        $formattedForm = collect($formattedForm);
+        dd($formattedForm->title);
+        return view("forms.report")->with("formattedForm","formattedForm");
 
     }
 }

@@ -418,6 +418,12 @@ table#mytable th, table#mytable td{
 
     position: relative;
 }
+
+.avgrating{
+    padding: 10px;
+    background: #f4f4f4;
+    border-radius: 5px;
+}
 /*
 a {
 	color: #1a73e8;

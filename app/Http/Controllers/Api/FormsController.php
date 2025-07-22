@@ -60,6 +60,7 @@ class FormsController extends Controller
                 ];
             })->toArray(),
         ];
+        $formattedForm = collect($formattedForm);
         return response()->json($formattedForm);
     }
 
@@ -91,11 +92,20 @@ class FormsController extends Controller
 
         $results = [
             'questions' => $form->questions()->orderBy("id",'asc')->get()->map(function ($question)  use ($optionCounts) {
+                    $average = null;
+
+                    if ($question->type === 'rating') {
+                        $average = DB::table('answers')
+                        ->join('options', 'answers.option_id', '=', 'options.id')
+                        ->where('answers.question_id', $question->id)
+                        ->avg(DB::raw('CAST(options.value AS NUMERIC)'));
+                    }
                     return [
                         'id' => $question->id,
                         'name' => $question->name,
                         'type' => $question->type,
                         'required' => $question->required,
+                        'average' => round($average, 2),
                         'options' => $question->options()->orderBy("id",'asc')->get()->map(function ($option) use ($optionCounts) {
                             return [
                                 'id' => $option->id,

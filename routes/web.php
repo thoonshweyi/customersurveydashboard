@@ -55,6 +55,9 @@ Route::middleware('auth')->group(function () {
     Route::delete("/roleusersbulkdeletes",[RoleUsersController::class,"bulkdeletes"])->name("roleusers.bulkdeletes");
 
     Route::resource('forms',FormsController::class);
+    Route::get('forms/{id}/report',[FormsController::class,"report"])->name('forms.report');
+
+
     Route::resource('surveyresponses',SurveyResponsesController::class);
     Route::get('surveyresponsesdashboard/{form_id}',[SurveyResponsesController::class,"dashboard"])->name("surveyresponsesdashboard");
     Route::get('surveyresponsesexport/{form_id}',[SurveyResponsesController::class,"export"])->name("surveyresponsesexport");

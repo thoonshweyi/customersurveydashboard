@@ -87,7 +87,7 @@
         <!-- Google Chart -->
         {{-- <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> --}}
         <!-- Chartjs js1 -->
-        {{-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> --}}
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <!-- Raphael must be included before justgage -->
         <!-- https://github.com/toorshia/justgage -->
         {{-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.4/raphael-min.js"></script>

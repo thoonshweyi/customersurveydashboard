@@ -90,7 +90,7 @@
                                 <thead class="thead-dark">
                                     <th>No</th>
                                     <th>Vendor</th>
-                                    <th>Branch</th>
+                                    <th>Prefer Branch</th>
                                     <th>Feedback Count</th>
                                     <th>Action</th>
                                 </thead>

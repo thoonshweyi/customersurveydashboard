@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Form;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
 class FormsController extends Controller
@@ -78,5 +79,37 @@ class FormsController extends Controller
         //
     }
 
-   
+
+    public function report(string $id){
+        $form = Form::find($id);
+
+        $optionCounts = DB::table('answers')
+        ->select('option_id', DB::raw('COUNT(*) as total'))
+        ->groupBy('option_id')
+        // ->get();
+        ->pluck('total','option_id');
+
+        $results = [
+            'questions' => $form->questions()->orderBy("id",'asc')->get()->map(function ($question)  use ($optionCounts) {
+                    return [
+                        'id' => $question->id,
+                        'name' => $question->name,
+                        'type' => $question->type,
+                        'required' => $question->required,
+                        'options' => $question->options()->orderBy("id",'asc')->get()->map(function ($option) use ($optionCounts) {
+                            return [
+                                'id' => $option->id,
+                                'name' => $option->name,
+                                'value' => $option->value,
+                                'count' => $optionCounts["$option->id"] ?? 0,
+                            ];
+                        })->toArray(),
+                ];
+            })
+        ];
+        // dd($results);
+
+        return response()->json($results);
+
+    }
 }

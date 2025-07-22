@@ -22,6 +22,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::apiResource("forms",FormsController::class,["as"=>"api"]);
+Route::get("/formsreport/{id}",[FormsController::class,"report"]);
 Route::apiResource("surveyresponses",SurveyResponsesController::class,["as"=>"api"]);
 Route::get("/surveyresponsesdashboard/{form_id}",[SurveyResponsesController::class,"dashboard"]);
 Route::get("/branchesdashboard",[BranchesController::class,"dashboard"]);

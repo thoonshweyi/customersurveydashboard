@@ -25,10 +25,10 @@
 
                     <thead>
                          <th>No</th>
-                         <th>Form</th>
-                         <th>Branch</th>
                          <th>Submitted At</th>
                          <th>Respondent</th>
+                         <th>Branch</th>
+                         <th>Form</th>
                          {{-- <th>Created At</th>
                          <th>Updated At</th> --}}
                          <th>Action</th>
@@ -39,16 +39,17 @@
                          <tr>
 
                               <td>{{++$idx}}</td>
-                              <td>{{ $surveyresponse->form->title }}</td>
-                              <td>{{ $surveyresponse->branch->branch_name }}</td>
                               <td>{{ \Carbon\Carbon::parse($surveyresponse->submitted_at)->format('d M Y h:i:s') }}</td>
-                              {{-- <td>{{ $surveyresponse->created_at->format('d M Y') }}</td>
-                              <td>{{ $surveyresponse->updated_at->format('d M Y') }}</td> --}}
-                              <td>{{
+                               <td>{{
                                     $surveyresponse->respondent()['name'] ?? 'Unknown'
                                 }}
                                 <span class="d-block">{{$surveyresponse->respondent()['phone'] ?? 'No Phone'}}</span>
                               </td>
+                              <td>{{ $surveyresponse->branch->branch_name }}</td>
+                              <td>{{ $surveyresponse->form->title }}</td>
+                              {{-- <td>{{ $surveyresponse->created_at->format('d M Y') }}</td>
+                              <td>{{ $surveyresponse->updated_at->format('d M Y') }}</td> --}}
+
                               <td>
                                     <a href="{{ route('surveyresponses.show',$surveyresponse->id) }}" class="text-info" ><i class="fas fa-eye"></i></a>
                               </td>

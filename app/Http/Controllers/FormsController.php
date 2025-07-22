@@ -286,4 +286,13 @@ class FormsController extends Controller
         }
     }
 
+
+    public function report(Request $request,$id){
+
+        $form = Form::find($id);
+        // dd($form);
+
+        return view("forms.report",compact("form"));
+
+    }
 }

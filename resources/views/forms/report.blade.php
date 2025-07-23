@@ -37,7 +37,7 @@
 
                 <div class="container csform-container mt-0">
                        <div class="csform-header">
-                            <h2 class="mb-2">{{ $form->title }}</h2>
+                            <h2 class="mb-2">{{ $form["title"] }}</h2>
                             {{-- <p class="mb-0">{{ $form->description }}</p> --}}
                         </div>
 
@@ -48,11 +48,11 @@
 
                         <div class="section-container">
 
-                            @foreach ($form['sections'] as $sectionIndex => $section)
+                            @foreach ($form["sections"] as $sectionIndex => $section)
                                 <div class="section" data-section-index="{{ $sectionIndex }}" data-question-count="{{ count($section['questions'] ?? []) }}">
 
                                     <div class="d-flex justify-content-between mt-2">
-                                            <h6 class="section-header m-0">{{ $section->title }}</h6>
+                                            <h6 class="section-header m-0">{{ $section["title"] }}</h6>
                                     </div>
 
                                     {{-- <div class="section-card">
@@ -64,35 +64,35 @@
                                     <div class="question-container">
                                         @foreach ($section['questions'] ?? [] as $questionIndex => $question)
                                                 <div class="csform-card mb-4">
-                                                    <label class="form-label">{{ $question->name }} <span class="text-danger">*</span></label>
+                                                    <label class="form-label">{{ $question["name"] }} <span class="text-danger">*</span></label>
 
 
                                                     @php
                                                           $questionanswers = collect();
                                                     @endphp
-                                                    @if($question->type == 'text' || $question->type == 'textarea')
+                                                    @if($question["type"] == 'text' || $question["type"] == 'textarea')
                                                         @foreach($questionanswers as $questionanswer )
-                                                            <p>{{ $questionanswer->text }}</p>
+                                                            <p>{{ $questionanswer["text"] }}</p>
                                                         @endforeach
                                                     @endif
 
-                                                    @if(!in_array($question->type, ['text','textarea']))
-                                                        @if(in_array($question->type,['rating']))
-                                                        <div id="avgrating-{{$question->id}}" class="avgrating">
+                                                    @if(!in_array($question["type"], ['text','textarea']))
+                                                        @if(in_array($question["type"],['rating']))
+                                                        <div id="avgrating-{{$question["id"]}}" class="avgrating">
 
-                                                            <h6 class="text-center fw-bold">Average rating (4.00)</h6>
+                                                            <h6 class="text-center fw-bold">Average rating ({{ number_format($question["average"],2) }})</h6>
                                                             <div  class="d-flex justify-content-around align-items-center mb-2">
                                                                 @foreach ($question['options'] as $optionIndex =>$option)
                                                                     @php
                                                                         // $selected = $questionanswer->option->value;
                                                                         // $starValue = $option->value;
 
-                                                                        $selected = 4;
-                                                                        $starValue = $option->value;
+                                                                        $selected = round($question["average"]);
+                                                                        $starValue = $option["value"];
                                                                     @endphp
                                                                     <div  class="text-center">
                                                                         <div class="form-group">
-                                                                                <label>{{ $option->name }}</label>
+                                                                                <label>{{ $option["name"] }}</label>
                                                                         </div>
                                                                         <i
                                                                         class="{{ $selected >= $starValue ? "fas" : "far"  }} fa-star text-warning"
@@ -103,7 +103,7 @@
                                                             </div>
                                                         </div>
                                                         @endif
-                                                        <div class="d-flex justify-self-center" style="width: 40%; justify-self: center"> <canvas id="chart-{{$question->id}}" style="display:none;" width="250"></canvas></div>
+                                                        <div class="d-flex justify-self-center" style="width: 40%; justify-self: center"> <canvas id="chart-{{$question["id"]}}" style="display:none;" width="250"></canvas></div>
 
                                                     @endif
 

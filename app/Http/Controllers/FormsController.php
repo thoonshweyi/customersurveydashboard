@@ -300,11 +300,20 @@ class FormsController extends Controller
                     'title' => $section->title,
                     'description' => $section->description,
                     'questions' => $section->questions()->orderBy("id",'asc')->get()->map(function ($question) {
+                        $average = null;
+
+                        if ($question->type === 'rating') {
+                            $average = DB::table('answers')
+                            ->join('options', 'answers.option_id', '=', 'options.id')
+                            ->where('answers.question_id', $question->id)
+                            ->avg(DB::raw('CAST(options.value AS NUMERIC)'));
+                        }
                         return [
                             'id' => $question->id,
                             'name' => $question->name,
                             'type' => $question->type,
                             'required' => $question->required,
+                            'average' => $average,
                             'options' => $question->options()->orderBy("id",'asc')->get()->map(function ($option) {
                                 return [
                                     'id' => $option->id,
@@ -317,9 +326,7 @@ class FormsController extends Controller
                 ];
             })->toArray(),
         ];
-        $formattedForm = collect($formattedForm);
-        dd($formattedForm->title);
-        return view("forms.report")->with("formattedForm","formattedForm");
+        return view("forms.report")->with("form", $formattedForm);
 
     }
 }

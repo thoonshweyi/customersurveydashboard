@@ -429,6 +429,16 @@ a {
 	color: #1a73e8;
 	text-decoration: none;
 } */
+
+.form-tools{
+    display: flex;
+    justify-content: end;
+    gap: 20px;
+
+    background: #fff;
+    padding: 5px;
+    border-radius: 10px;
+}
 /* End Customer Survey Form */
 
 

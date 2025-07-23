@@ -19,6 +19,7 @@ class Question extends Model
         'type',
         'required',
         'image',
+        'import_options'
     ];
 
 

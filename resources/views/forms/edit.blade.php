@@ -188,12 +188,20 @@
                                                                             <input type="hidden" name="sections[{{ $sectionIndex }}][questions][{{ $questionIndex }}][options][{{$optionIndex}}][value]" value="{{ $option['value'] ?? '' }}"/>
                                                                         </div>
                                                                     @endforeach
+
+                                                                    @if($question["import_options"] == null)
                                                                     <div class="d-flex align-items-center">
                                                                         <i class="{{ $iconClass }} text-secondary fa-sm"></i>
                                                                         <a class="add-option {{ $addOptionClass }}" href="javascript:void(0)">Add Option</a>
                                                                         <span>or</span>
                                                                         <a href="#importmodal" data-bs-toggle='modal' class="importmodalbtn">Import Questions</a>
                                                                     </div>
+                                                                    @else
+                                                                    <div class="d-flex align-items-center">
+                                                                        <i class="{{ $iconClass }} text-secondary fa-sm"></i>
+                                                                         <a href="{{ route("questions.refresh",$question['id']) }}" class="importmodalbtn">Refresh options as "{{ $question["import_options"] }}" table</a>
+                                                                    </div>
+                                                                    @endif
                                                                 @elseif ($question['type'] == 'rating')
                                                                     <div class="d-flex justify-content-around align-items-center mb-2">
                                                                             @foreach ($question['options'] as $optionIndex =>$option)
@@ -240,7 +248,7 @@
                                 </div>
                             @endforeach
 
-                            @foreach ($form['sections'] as $sectionIndex => $section)
+                            @foreach ($formattedForm['sections'] as $sectionIndex => $section)
                                 @if(isset($section['id']))
                                     <input type="hidden" name="sections[{{ $sectionIndex }}][id]" value="{{ $section['id'] }}">
                                 @endif

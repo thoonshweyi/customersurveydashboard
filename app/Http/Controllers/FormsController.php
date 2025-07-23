@@ -150,6 +150,7 @@ class FormsController extends Controller
                             'name' => $question->name,
                             'type' => $question->type,
                             'required' => $question->required,
+                            'import_options' => $question->import_options,
                             'options' => $question->options()->orderBy("id",'asc')->get()->map(function ($option) {
                                 return [
                                     'id' => $option->id,
@@ -163,7 +164,7 @@ class FormsController extends Controller
             })->toArray(),
         ];
         // dd($formattedForm);
-
+        // dd($form->sections,$form['sections']);
 
         return view("forms.edit",compact('form','optionimporttables'))->with("statuses",$statuses)->with("formattedForm",$formattedForm);
     }

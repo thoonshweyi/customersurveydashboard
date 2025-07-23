@@ -63,22 +63,6 @@
             <label>{{__('user.role')}}</label>
             <select id="user_role" class="form-control ">
                 <option value="">All Role</option>
-                <option value="Admin">Admin</option>
-                <option value="Admin">System Admin</option>
-                <option value="OperationPerson">Operation Person</option>
-                <option value="BranchManager">Branch Manager</option>
-                <option value="CategoryHead">Category Head</option>
-                <option value="MerchandisingManager">Merchandising Manager</option>
-                <option value="RGOut">RG Out</option>
-                <option value="Accounting">Accounting</option>
-                <option value="RGIn">RG In</option>
-                <option value="RGInRGOut">RG In & RG Out</option>
-                <option value="DC Branch Manager">DC Branch Manager</option>
-                <option value="DC Operation">DC Operation</option>
-                <option value="DC Staff">DC Staff</option>
-                <option value="Sourcing Manger">Sourcing Manger</option>
-                <option value="Logistics">Logistics</option>
-                <option value="Sourcing">Sourcing</option>
             </select>
             </div>
 

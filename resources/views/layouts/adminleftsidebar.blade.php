@@ -132,7 +132,7 @@
                             <li class="nav-item"><a href="javascript:void(0);" class="nav-link text-white p-3 mb-2 sidebarlinks" data-bs-toggle="collapse" data-bs-target="#pagelayout"><i class="fas fa-user-cog"></i> System Admin <i class="fas fa-angle-right mores"></i></a>
                                 <ul id="pagelayout" class="collapse ps-4">
                                     <li><a href="{{route('users.index')}}" class="nav-link text-white sidebarlinks"><i class="fas fa-long-arrow-alt-right me-4"></i>  Users</a></li>
-                                    <li><a href="javascript:void(0);" class="nav-link text-white sidebarlinks"><i class="fas fa-long-arrow-alt-right me-4"></i> Branches </a></li>
+                                    <li><a href="{{ route("branches.index") }}" class="nav-link text-white sidebarlinks"><i class="fas fa-long-arrow-alt-right me-4"></i> Branches </a></li>
                                     <li><a href="{{ route('roles.index') }}" class="nav-link text-white sidebarlinks"><i class="fas fa-long-arrow-alt-right me-4"></i> Roles </a></li>
                                     <li><a href="{{ route('permissions.index') }}" class="nav-link text-white sidebarlinks"><i class="fas fa-long-arrow-alt-right me-4"></i> Permissions </a></li>
                                     <li><a href="{{ route('permissionroles.index') }}" class="nav-link text-white sidebarlinks"><i class="fas fa-long-arrow-alt-right me-4"></i> Permission Roles </a></li>

@@ -32,7 +32,7 @@ class BranchController extends Controller
                 }
 
                 if(!empty($request->retailbranch)){
-                    $result = $result->whereIn('branch_id',[1,2,3,9,10,11]);
+                    $result = $result->whereIn('status_id',[1]);
                 }
                  $result = $result->orderBy('branch_id',"asc");
                 return DataTables::of($result)->make(true);
@@ -128,5 +128,13 @@ class BranchController extends Controller
                 ->intended(route("branches.index"))
                 ->with('error', 'Fail to delete Branch!');
         }
+    }
+
+    public function status(Request $request){
+        $branch = Branch::findOrFail($request["id"]);
+        $branch->status_id = $request["status_id"];
+        $branch->save();
+
+        return response()->json(["success"=>"Status Change Successfully"]);
     }
 }

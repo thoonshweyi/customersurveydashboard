@@ -35,6 +35,12 @@
                     </div>
                 </div> --}}
 
+
+                <div class="form-tools">
+                    <a target="_blank" href="{{ route("forms.show",$form['id']) }}" class="toolboxitems add-btn text-secondary" title="Preview"><i class="fas fa-eye"></i></a>
+                    <a href="#responderlinksmodal" data-bs-toggle="modal" class="toolboxitems add-btn text-secondary" title="Responder Links"><i class="fas fa-link"></i></a>
+                </div>
+
                 <div class="container csform-container mt-0">
                     <form id="updateform" action="{{ route("forms.update",$form['id']) }}" method="POST" enctype="multipart/form-data">
                         @csrf
@@ -325,6 +331,56 @@
                     </div>
                </div>
           <!-- end edit modal -->
+
+           <!-- start edit responderlinksmodal -->
+                <div id="responderlinksmodal" class="modal fade">
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h6 class="modal-title">Responder Link Modal</h6>
+                                    <button type="" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+
+                                <div class="modal-body">
+                                    <form id="formaction" action="" method="POST">
+                                        <div class="row align-items-end">
+
+
+                                        </div>
+                                    </form>
+
+                                    <table id="" class="table table-sm table-hover border">
+
+                                            <thead>
+                                                <th>No</th>
+                                                <th>Branch</th>
+                                                <th>Link</th>
+                                                <th>Action</th>
+                                            </thead>
+
+                                            <tbody>
+                                                @foreach($branches as $idx=>$branch)
+                                                <tr>
+
+                                                    <td>{{++$idx}}</td>
+                                                    <td>{{ $branch->branch_name }}</td>
+                                                    <td><a target="_blank" href="{{ env('FRONTEND_URL')."/surveyresponses/$form->id/$branch->branch_id/create" }}">{{ env('FRONTEND_URL')."/surveyresponses/$form->id/$branch->branch_id/create"}}</a></td>
+                                                    <td></td>
+                                                </tr>
+                                                @endforeach
+                                            </tbody>
+
+                                    </table>
+
+                                </div>
+
+                                <div class="modal-footer">
+
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            <!-- end edit responderlinksmodal -->
      <!-- END MODAL AREA -->
 @endsection
 
@@ -921,6 +977,7 @@
 
                 });
                 {{-- End Updadte Btn --}}
+
           });
      </script>
 @endsection

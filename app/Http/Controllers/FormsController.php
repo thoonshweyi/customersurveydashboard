@@ -200,6 +200,9 @@ class FormsController extends Controller
         // dd($formattedForm);
         // dd($form->sections,$form['sections']);
 
+
+        $responderlinks = $this->getResponderLinks($form->id);
+
         return view("forms.edit",compact('form','optionimporttables'))->with("statuses",$statuses)->with("formattedForm",$formattedForm);
     }
 
@@ -363,5 +366,12 @@ class FormsController extends Controller
         ];
         return view("forms.report")->with("form", $formattedForm);
 
+    }
+
+    public function getResponderLinks($id){
+        $form = Form::find($id);
+        // dd($form);
+
+        
     }
 }

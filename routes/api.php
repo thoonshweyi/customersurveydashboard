@@ -27,5 +27,6 @@ Route::apiResource("surveyresponses",SurveyResponsesController::class,["as"=>"ap
 Route::get("/surveyresponsesdashboard/{form_id}",[SurveyResponsesController::class,"dashboard"]);
 Route::get("/branchesdashboard",[BranchesController::class,"dashboard"]);
 
+Route::get("/branches",[BranchesController::class,"index"]);
 
 

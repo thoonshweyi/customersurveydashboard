@@ -2,10 +2,11 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Branch;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\ServiceProvider;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -24,7 +25,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         View::composer('*',function($view){
-            $view->with("userdata",Auth::user());
+            $branches = Branch::where("status_id",'1')->get();
+            $view->with("userdata",Auth::user())->with("branches",$branches);
         });
 
         Paginator::useBootstrapFive();

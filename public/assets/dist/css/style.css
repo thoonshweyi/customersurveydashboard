@@ -437,7 +437,8 @@ a {
 
     background: #fff;
     padding: 5px;
-    border-radius: 10px;
+    /* border-radius: 10px; */
+    margin-bottom: 12px;
 }
 /* End Customer Survey Form */
 

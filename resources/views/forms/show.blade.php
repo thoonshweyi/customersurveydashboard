@@ -44,10 +44,7 @@
                         </div> --}}
 
 
-                        <div class="form-tools">
-                            <a target="_blank" href="{{ route("forms.show",$form['id']) }}" class="toolboxitems add-btn text-secondary" title="Preview"><i class="fas fa-eye"></i></a>
-                            <a href="#responderlinksmodal" data-bs-toggle="modal" class="toolboxitems add-btn text-secondary" title="Responder Links"><i class="fas fa-link"></i></a>
-                        </div>
+
 
                        <div class="csform-header">
                             <h2 class="mb-2">{{ $form["title"] }}</h2>
@@ -169,69 +166,7 @@
 
 
     <!-- START MODAL AREA -->
-    <!-- start edit modal -->
-        <div id="responderlinksmodal" class="modal fade">
-            <div class="modal-dialog modal-lg modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h6 class="modal-title">Responder Link Modal</h6>
-                            <button type="" class="btn-close" data-bs-dismiss="modal"></button>
-                        </div>
 
-                        <div class="modal-body">
-                            <form id="formaction" action="" method="POST">
-                                <div class="row align-items-end">
-
-
-                                </div>
-                            </form>
-
-                            <table id="" class="table table-sm table-hover border">
-
-                                    <thead>
-                                        <th>No</th>
-                                        <th>Branch</th>
-                                        <th>Link</th>
-                                    </thead>
-
-                                    <tbody>
-                                        {{-- @foreach($surveyresponses as $idx=>$surveyresponse)
-                                        <tr>
-
-                                            <td>{{++$idx}}</td>
-                                            <td>{{ \Carbon\Carbon::parse($surveyresponse->submitted_at)->format('d M Y h:i:s') }}</td>
-                                            <td>{{
-                                                    $surveyresponse->respondent()['name'] ?? 'Unknown'
-                                                }}
-                                                <span class="d-block">{{$surveyresponse->respondent()['phone'] ?? 'No Phone'}}</span>
-                                            </td>
-                                            <td>{{ $surveyresponse->branch->branch_name }}</td>
-                                            <td>{{ $surveyresponse->form->title }}</td>
-                                            <td>{{ $surveyresponse->created_at->format('d M Y') }}</td>
-                                            <td>{{ $surveyresponse->updated_at->format('d M Y') }}</td>
-
-                                            <td>
-                                                    <a href="{{ route('surveyresponses.show',$surveyresponse->id) }}" class="text-info" ><i class="fas fa-eye"></i></a>
-                                            </td>
-                                            <form id="formdelete-{{ $idx }}" class="" action="{{route('surveyresponses.destroy',$surveyresponse->id)}}" method="POST">
-                                                @csrf
-                                                @method("DELETE")
-                                            </form>
-                                        </tr>
-                                        @endforeach --}}
-                                    </tbody>
-
-                            </table>
-
-                        </div>
-
-                        <div class="modal-footer">
-
-                        </div>
-                    </div>
-            </div>
-        </div>
-    <!-- end edit modal -->
      <!-- END MODAL AREA -->
 @endsection
 

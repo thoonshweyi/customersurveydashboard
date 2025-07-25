@@ -6,6 +6,8 @@ use Exception;
 use Carbon\Carbon;
 use App\Models\Answer;
 use App\Models\Question;
+use App\Models\Responder;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\SurveyResponse;
 use Illuminate\Support\Facades\DB;
@@ -48,6 +50,10 @@ class SurveyResponsesController extends Controller
 
         DB::beginTransaction();
         try{
+
+            $responder_arr = $this->getResponder($request->questionanswers);
+            $responder = Responder::firstOrCreate($responder_arr);
+
             $surveyresponse = SurveyResponse::create([
                 'form_id' => $request->form_id,
                 'branch_id' => $request->branch_id,
@@ -128,5 +134,29 @@ class SurveyResponsesController extends Controller
             "totalsurveyresponses" => $totalsurveyresponses,
             "contactsurveyresponses"=> $totalsurveyresponses
         ]);
+    }
+
+    public function getResponder($questionAnswers){
+        $fillableFields = (new Responder())->getFillable();
+
+        $questionIds = array_keys($questionAnswers);
+
+        $questions = Question::whereIn('id', $questionIds)->get()->keyBy('id');
+
+        // Must include not null field
+        $responder = [
+            "name" => "Responder"
+        ];
+
+        foreach ($questionAnswers as $questionId => $answerValue) {
+            if (isset($questions[$questionId])) {
+                $fieldName = Str::slug($questions[$questionId]->name);
+                if (in_array($fieldName, $fillableFields)) {
+                    $responder[$fieldName] = $answerValue;
+                }
+            }
+        }
+
+        return $responder;
     }
 }

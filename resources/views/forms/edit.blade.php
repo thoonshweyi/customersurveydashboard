@@ -365,7 +365,9 @@
                                                     <td>{{++$idx}}</td>
                                                     <td>{{ $branch->branch_name }}</td>
                                                     <td><a target="_blank" href="{{ env('FRONTEND_URL')."/surveyresponses/$form->id/$branch->branch_id/create" }}">{{ env('FRONTEND_URL')."/surveyresponses/$form->id/$branch->branch_id/create"}}</a></td>
-                                                    <td></td>
+                                                    <td>
+                                                        <a href="javascript:void(0)" class="clipboard-btn" title="Copy Link" data-url="{{ env('FRONTEND_URL')."/surveyresponses/$form->id/$branch->branch_id/create" }}"><i class="far fa-clipboard"></i></a>
+                                                    </td>
                                                 </tr>
                                                 @endforeach
                                             </tbody>
@@ -977,6 +979,19 @@
 
                 });
                 {{-- End Updadte Btn --}}
+
+
+                $(".clipboard-btn").click(function(){
+                     var geturl = $(this).data("url");
+                    // console.log(geturl);
+                    navigator.clipboard.writeText(geturl);
+
+                    Swal.fire({
+                        title: "Clipboard copied!",
+                        text: "Response links has been copied",
+                        icon: "success"
+                    });
+                })
 
           });
      </script>

@@ -53,11 +53,11 @@ class SurveyResponsesController extends Controller
 
             $responder_arr = $this->getResponder($request->questionanswers);
             $responder = Responder::firstOrCreate($responder_arr);
-
             $surveyresponse = SurveyResponse::create([
                 'form_id' => $request->form_id,
                 'branch_id' => $request->branch_id,
-                'submitted_at' => Carbon::now()
+                'submitted_at' => Carbon::now(),
+                'responder_id' => $responder->id
             ]);
 
             foreach ($request->questionanswers as $questionId => $answerData) {

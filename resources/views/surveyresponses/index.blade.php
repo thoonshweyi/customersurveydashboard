@@ -26,7 +26,8 @@
                     <thead>
                          <th>No</th>
                          <th>Submitted At</th>
-                         <th>Respondent</th>
+                         <th>Responder Name</th>
+                         <th>Responder Phone</th>
                          <th>Branch</th>
                          <th>Form</th>
                          {{-- <th>Created At</th>
@@ -40,11 +41,12 @@
 
                               <td>{{++$idx}}</td>
                               <td>{{ \Carbon\Carbon::parse($surveyresponse->submitted_at)->format('d M Y h:i:s') }}</td>
-                               <td>{{
-                                    $surveyresponse->respondent()['name'] ?? 'Unknown'
-                                }}
-                                <span class="d-block">{{$surveyresponse->respondent()['phone'] ?? 'No Phone'}}</span>
-                              </td>
+                                <td>
+                                    {{ $surveyresponse->responder?->name ?? 'Responder' }}
+                                </td>
+                                <td>
+                                    {{ $surveyresponse->responder?->phone ?? "No Phone" }}
+                                </td>
                               <td>{{ $surveyresponse->branch->branch_name }}</td>
                               <td>{{ $surveyresponse->form->title }}</td>
                               {{-- <td>{{ $surveyresponse->created_at->format('d M Y') }}</td>

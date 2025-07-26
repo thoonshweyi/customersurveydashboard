@@ -17,6 +17,7 @@ class SurveyResponse extends Model
         'form_id',
         'branch_id',
         'submitted_at',
+        'responder_id'
     ];
 
     public function form(){
@@ -25,6 +26,10 @@ class SurveyResponse extends Model
 
     public function branch(){
         return $this->belongsTo(Branch::class,"branch_id","branch_id");
+    }
+
+    public function responder(){
+        return $this->belongsTo(Responder::class,"responder_id","id");
     }
 
     public function answers()

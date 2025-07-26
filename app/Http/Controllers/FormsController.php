@@ -203,7 +203,7 @@ class FormsController extends Controller
 
         $responderlinks = $this->getResponderLinks($form->id);
 
-        return view("forms.edit",compact('form','optionimporttables'))->with("statuses",$statuses)->with("formattedForm",$formattedForm);
+        return view("forms.edit",compact('form','optionimporttables','responderlinks'))->with("statuses",$statuses)->with("formattedForm",$formattedForm);
     }
 
 
@@ -368,10 +368,20 @@ class FormsController extends Controller
 
     }
 
-    public function getResponderLinks($id){
-        $form = Form::find($id);
-        // dd($form);
+    public function getResponderLinks($id)
+    {
+        $form = Form::findOrFail($id);
+        $branches = Branch::where("status_id", $id)->get();
 
-        
+        $responderlinks = [];
+
+        foreach ($branches as $branch) {
+            $responderlinks[] = (object)[
+                'name' => $branch->branch_name,
+                'link' => env('FRONTEND_URL') . "/surveyresponses/{$form->id}/{$branch->branch_id}/create",
+            ];
+        }
+
+        return $responderlinks;
     }
 }

@@ -37,7 +37,7 @@
 
 
                 <div class="form-tools">
-                    <a target="_blank" href="{{ route("forms.show",$form['id']) }}" class="toolboxitems add-btn text-secondary" title="Preview"><i class="fas fa-eye"></i></a>
+                    <a target="_blank" href="{{ route("forms.show",$form['id']) }}" class="toolboxitems add-btn text-info" title="Preview"><i class="fas fa-eye"></i></a>
                     <a href="#responderlinksmodal" data-bs-toggle="modal" class="toolboxitems add-btn text-secondary" title="Responder Links"><i class="fas fa-link"></i></a>
                 </div>
 
@@ -359,14 +359,14 @@
                                             </thead>
 
                                             <tbody>
-                                                @foreach($branches as $idx=>$branch)
+                                                @foreach($responderlinks as $idx=>$responderlink)
                                                 <tr>
 
                                                     <td>{{++$idx}}</td>
-                                                    <td>{{ $branch->branch_name }}</td>
-                                                    <td><a target="_blank" href="{{ env('FRONTEND_URL')."/surveyresponses/$form->id/$branch->branch_id/create" }}">{{ env('FRONTEND_URL')."/surveyresponses/$form->id/$branch->branch_id/create"}}</a></td>
+                                                    <td>{{ $responderlink->name }}</td>
+                                                    <td><a target="_blank" href="{{ $responderlink->link }}">{{ $responderlink->link }}</a></td>
                                                     <td>
-                                                        <a href="javascript:void(0)" class="clipboard-btn" title="Copy Link" data-url="{{ env('FRONTEND_URL')."/surveyresponses/$form->id/$branch->branch_id/create" }}"><i class="far fa-clipboard"></i></a>
+                                                        <a href="javascript:void(0)" class="clipboard-btn" title="Copy Link" data-url="{{ $responderlink->link }}"><i class="far fa-clipboard"></i></a>
                                                     </td>
                                                 </tr>
                                                 @endforeach

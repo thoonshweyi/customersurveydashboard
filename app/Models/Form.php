@@ -44,4 +44,9 @@ class Form extends Model
     {
         return $this->hasMany(Option::class);
     }
+
+    public function responderlinks()
+    {
+        return $this->hasMany(ResponderLink::class);
+    }
 }

@@ -11,9 +11,11 @@ use App\Models\Section;
 use App\Models\Question;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\ResponderLink;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class FormsController extends Controller
 {
@@ -168,11 +170,13 @@ class FormsController extends Controller
         'id' => $form->id,
         'title' => old('title'),
         'description' => old('description'),
+        'collect_branch' => old('collect_branch'),
         'sections' => old('sections')
         ] : [
             'id' => $form->id,
             'title' => $form->title,
             'description' => $form->description,
+            'collect_branch' => $form->collect_branch,
             'sections' => $form->sections()->orderBy("id",'asc')->get()->map(function ($section) {
                 return [
                     'id' => $section->id,
@@ -201,9 +205,8 @@ class FormsController extends Controller
         // dd($form->sections,$form['sections']);
 
 
-        $responderlinks = $this->getResponderLinks($form->id);
 
-        return view("forms.edit",compact('form','optionimporttables','responderlinks'))->with("statuses",$statuses)->with("formattedForm",$formattedForm);
+        return view("forms.edit",compact('form','optionimporttables'))->with("statuses",$statuses)->with("formattedForm",$formattedForm);
     }
 
 
@@ -384,4 +387,74 @@ class FormsController extends Controller
 
         return $responderlinks;
     }
+
+    public function responderlinks(Request $request){
+        // dd('anonymous');
+        try{
+            $form = Form::findOrFail($request["id"]);
+            $form->collect_branch = $request["collect_branch"];
+            $form->save();
+
+            // Start Generate Response Links
+            $user = Auth::user();
+            $user_id = $user->id;
+
+            $collect_branch = $request["collect_branch"];
+            $form->responderlinks()->delete();
+            if($collect_branch == 3){
+                $branches = Branch::where("status_id", 1)->get();
+                foreach ($branches as $branch) {
+                    $responderlink = ResponderLink::create([
+                        "form_id" => $form->id,
+                        "branch_id" => $branch->branch_id,
+                        "url" => env('FRONTEND_URL') . "/surveyresponses/{$form->id}/{$branch->branch_id}/create",
+                        "image" => 'image',
+                        "status_id" => 1,
+                        "user_id" => $user_id
+                    ]);
+                    $responderlink->update([
+                        "image"=>$this->generateQRImage($responderlink->url),
+                    ]);
+                }
+            }elseif($collect_branch == 4){
+                $responderlink = ResponderLink::create([
+                    "form_id" => $form->id,
+                    "branch_id" => 0,
+                    "url" => env('FRONTEND_URL') . "/surveyresponses/{$form->id}/create",
+                    "image" => 'image',
+                    "status_id" => 1,
+                    "user_id" => $user_id
+                ]);
+                $responderlink->update([
+                    "image"=>$this->generateQRImage($responderlink->url)
+                ]);
+            }
+            // End Generate Response Links
+
+
+            // $socialapplications = Socialapplication::all();
+            // return response()->json(["status"=>"scuccess","data"=>$socialapplications]);
+
+        }catch(Exception $e){
+            return response()->json(["status"=>"failed","message"=>$e->getMessage()]);
+        }
+    }
+
+    public function generateQRImage($text){
+        $uniqueId = (string) Str::uuid();
+
+        $qrCode = QrCode::format('svg')->size(100)->generate($text);
+        $qr_file_path = public_path("assets/img/responderlinks/$uniqueId.svg");
+        $filepath = "assets/img/responderlinks/$uniqueId.svg";
+        // Ensure the directory exists
+        if (!file_exists(dirname($qr_file_path))) {
+            mkdir(dirname($qr_file_path), 0755, true);
+        }
+        file_put_contents($qr_file_path, $qrCode);
+
+        return $filepath;
+    }
 }
+
+
+// composer require simplesoftwareio/simple-qrcode

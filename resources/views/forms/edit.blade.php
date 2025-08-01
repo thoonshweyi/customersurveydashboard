@@ -344,8 +344,15 @@
                                 <div class="modal-body">
                                     <form id="formaction" action="" method="POST">
                                         <div class="row align-items-end">
-
-
+                                            <div class="d-flex justify-content-between aligh-items-center">
+                                                <div>
+                                                    <label for="">Collect Branch</label>
+                                                    <p><small>Branch info will be saved with each submission.</small></p>
+                                                </div>
+                                                <div class="form-checkbox form-switch">
+                                                    <input type="checkbox" class="form-check-input responderslinks-btn" {{  $form["collect_branch"] === 3 ? 'checked' : ''}} data-id="{{ $form['id'] }}" />
+                                                </div>
+                                            </div>
                                         </div>
                                     </form>
 
@@ -355,18 +362,20 @@
                                                 <th>No</th>
                                                 <th>Branch</th>
                                                 <th>Link</th>
+                                                <th>QR</th>
                                                 <th>Action</th>
                                             </thead>
 
                                             <tbody>
-                                                @foreach($responderlinks as $idx=>$responderlink)
+                                                @foreach($form->responderlinks as $idx=>$responderlink)
                                                 <tr>
 
                                                     <td>{{++$idx}}</td>
-                                                    <td>{{ $responderlink->name }}</td>
-                                                    <td><a target="_blank" href="{{ $responderlink->link }}">{{ $responderlink->link }}</a></td>
+                                                    <td>{{ $responderlink->branch?->branch_name }}</td>
+                                                    <td><a target="_blank" href="{{ $responderlink->url }}">{{ $responderlink->url }}</a></td>
+                                                    <td><img src="{{ asset($responderlink->image) }}" alt=""></td>
                                                     <td>
-                                                        <a href="javascript:void(0)" class="clipboard-btn" title="Copy Link" data-url="{{ $responderlink->link }}"><i class="far fa-clipboard"></i></a>
+                                                        <a href="javascript:void(0)" class="clipboard-btn" title="Copy Link" data-url="{{ $responderlink->url }}"><i class="far fa-clipboard"></i></a>
                                                     </td>
                                                 </tr>
                                                 @endforeach
@@ -992,6 +1001,64 @@
                         icon: "success"
                     });
                 })
+
+
+                //Start change-btn
+               {{-- $(document).on("change",".change-btn",function(){
+
+                    var getid = $(this).data("id");
+                    // console.log(getid); // 1 2
+
+                    var setstatus = $(this).prop("checked") === true ? 3 : 4;
+                    // console.log(setstatus); // 3 4
+
+                    $.ajax({
+                         url:"socialapplicationsstatus",
+                         type:"GET",
+                         dataType:"json",
+                         data:{"id":getid,"status_id":setstatus},
+                         success:function(response){
+                              console.log(response); // {success: 'Status Change Successfully'}
+                              console.log(response.success); // Status Change Successfully
+
+                              Swal.fire({
+                                   title: "Updated!",
+                                   text: "Updated Successfully",
+                                   icon: "success"
+                              });
+                         }
+                    });
+               }); --}}
+               // End change btn
+
+
+               //Start change-btn
+               $(document).on("change",".responderslinks-btn",function(){
+
+                    var getid = $(this).data("id");
+                    {{-- console.log(getid); // 1 2 --}}
+
+                    var setstatus = $(this).prop("checked") === true ? 3 : 4;
+                    {{-- // console.log(setstatus); // 3 4 --}}
+
+                    $.ajax({
+                         url:"{{ url('/formsresponderlinks')}}",
+                         type:"GET",
+                         dataType:"json",
+                         data:{"id":getid,"collect_branch":setstatus},
+                         success:function(response){
+                              console.log(response); // {success: 'Status Change Successfully'}
+                              console.log(response.success); // Status Change Successfully
+
+                              Swal.fire({
+                                   title: "Updated!",
+                                   text: "Updated Successfully",
+                                   icon: "success"
+                              });
+                         }
+                    });
+               });
+               // End change btn
 
           });
      </script>

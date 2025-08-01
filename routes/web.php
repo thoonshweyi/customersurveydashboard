@@ -60,6 +60,7 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('forms',FormsController::class);
     Route::get('forms/{id}/report',[FormsController::class,"report"])->name('forms.report');
+    Route::get('formsresponderlinks',[FormsController::class,"responderlinks"])->name('forms.responderlinks');
 
 
     Route::resource('surveyresponses',SurveyResponsesController::class);

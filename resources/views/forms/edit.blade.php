@@ -356,7 +356,7 @@
                                         </div>
                                     </form>
 
-                                    <table id="" class="table table-sm table-hover border">
+                                    <table id="mytable" class="table table-sm table-hover border">
 
                                             <thead>
                                                 <th>No</th>
@@ -376,6 +376,7 @@
                                                     <td><img src="{{ asset($responderlink->image) }}" alt=""></td>
                                                     <td>
                                                         <a href="javascript:void(0)" class="clipboard-btn" title="Copy Link" data-url="{{ $responderlink->url }}"><i class="far fa-clipboard"></i></a>
+                                                        <a href="{{ asset($responderlink->image) }}" download="{{ $responderlink->branch?->branch_name }}"><i class="fas fa-download"></i></a>
                                                     </td>
                                                 </tr>
                                                 @endforeach
@@ -1048,13 +1049,43 @@
                          data:{"id":getid,"collect_branch":setstatus},
                          success:function(response){
                               console.log(response); // {success: 'Status Change Successfully'}
-                              console.log(response.success); // Status Change Successfully
 
-                              Swal.fire({
-                                   title: "Updated!",
-                                   text: "Updated Successfully",
-                                   icon: "success"
+                                const datas = response.data;
+                              // console.log(datas);
+
+                              let html;
+
+                            const assetBaseUrl = "{{ asset('') }}"
+                            $("#mytable tbody").html('');
+                            datas.forEach(function(data,idx){
+                                   // console.log(data);
+                                   html += `
+                                   <tr id="delete_${data.id}">
+                                        <td>${++idx}</td>
+                                        <td>${data.branch ? data.branch.branch_name : 'Anonymous Branch'}</td>
+                                        {{-- <td>
+                                             <div class="form-checkbox form-switch">
+                                                  <input type="checkbox" class="form-check-input change-btn" ${data.status_id == 3 ? "checked" : "" }  data-id="${data.id}" />
+                                             </div>
+                                        </td> --}}
+                                        <td>${data.url}</td>
+
+                                        <td><img src="${assetBaseUrl}${data.image}" alt=""></td>
+                                        <td>
+                                            <a href="javascript:void(0)" class="clipboard-btn" title="Copy Link" data-url="${data.url}"><i class="far fa-clipboard"></i></a>
+                                            <a href="${assetBaseUrl}${data.image}" download="${data.branch ? data.branch.branch_name : ''}"><i class="fas fa-download"></i></a>
+                                        </td>
+                                   </tr>
+                                   `;
+
                               });
+                              $("#mytable tbody").prepend(html);
+
+                            Swal.fire({
+                                title: "Added!",
+                                text: "Added Successfully",
+                                icon: "success"
+                            });
                          }
                     });
                });

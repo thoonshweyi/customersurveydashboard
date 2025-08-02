@@ -390,6 +390,8 @@ class FormsController extends Controller
 
     public function responderlinks(Request $request){
         // dd('anonymous');
+
+        DB::beginTransaction();
         try{
             $form = Form::findOrFail($request["id"]);
             $form->collect_branch = $request["collect_branch"];
@@ -404,38 +406,38 @@ class FormsController extends Controller
             if($collect_branch == 3){
                 $branches = Branch::where("status_id", 1)->get();
                 foreach ($branches as $branch) {
+                    $url = env('FRONTEND_URL') . "/surveyresponses/{$form->id}/{$branch->branch_id}/create";
                     $responderlink = ResponderLink::create([
                         "form_id" => $form->id,
                         "branch_id" => $branch->branch_id,
-                        "url" => env('FRONTEND_URL') . "/surveyresponses/{$form->id}/{$branch->branch_id}/create",
-                        "image" => 'image',
+                        "url" => $url,
+                        "image" => $this->generateQRImage($url),
                         "status_id" => 1,
                         "user_id" => $user_id
                     ]);
-                    $responderlink->update([
-                        "image"=>$this->generateQRImage($responderlink->url),
-                    ]);
+
                 }
             }elseif($collect_branch == 4){
+                $url = env('FRONTEND_URL') . "/surveyresponses/{$form->id}/create";
                 $responderlink = ResponderLink::create([
                     "form_id" => $form->id,
                     "branch_id" => 0,
-                    "url" => env('FRONTEND_URL') . "/surveyresponses/{$form->id}/create",
-                    "image" => 'image',
+                    "url" =>  $url,
+                    "image" => $this->generateQRImage($url),
                     "status_id" => 1,
                     "user_id" => $user_id
-                ]);
-                $responderlink->update([
-                    "image"=>$this->generateQRImage($responderlink->url)
                 ]);
             }
             // End Generate Response Links
 
+            $responderlinks = $form->responderlinks()->with('branch')->get();
 
-            // $socialapplications = Socialapplication::all();
-            // return response()->json(["status"=>"scuccess","data"=>$socialapplications]);
+            DB::commit();
+            return response()->json(["status"=>"scuccess","data"=>$responderlinks]);
 
         }catch(Exception $e){
+            DB::rollBack();
+            Log::debug($e->getMessage());
             return response()->json(["status"=>"failed","message"=>$e->getMessage()]);
         }
     }

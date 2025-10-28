@@ -26,6 +26,8 @@
                     </ul>
                 </div>
                 @endif
+
+
 {{--
                 <div class="row" style="position: sticky;  top: 0;
                                         background-color: green;
@@ -34,6 +36,11 @@
                         <button type="button" class="btn btn-primary">Update</button>
                     </div>
                 </div> --}}
+
+                <div class="form-tools">
+                    <a target="_blank" href="{{ route("forms.show",$form['id']) }}" class="toolboxitems add-btn text-info" title="Preview"><i class="fas fa-eye"></i></a>
+                    <a href="#responderlinksmodal" data-bs-toggle="modal" class="toolboxitems add-btn text-secondary" title="Responder Links"><i class="fas fa-link"></i></a>
+                </div>
 
                 <div class="container csform-container mt-0">
 
@@ -166,7 +173,67 @@
 
 
     <!-- START MODAL AREA -->
+        <!-- start edit responderlinksmodal -->
+            <div id="responderlinksmodal" class="modal fade">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h6 class="modal-title">Responder Link Modal</h6>
+                                <button type="" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
 
+                            <div class="modal-body">
+                                <form id="formaction" action="" method="POST">
+                                    <div class="row align-items-end">
+                                        <div class="d-flex justify-content-between aligh-items-center">
+                                            <div>
+                                                <label for="">Collect Branch</label>
+                                                <p><small>Branch info will be saved with each submission.</small></p>
+                                            </div>
+                                            <div class="form-checkbox form-switch">
+                                                <input type="checkbox" class="form-check-input responderslinks-btn" {{  $form["collect_branch"] === 3 ? 'checked' : ''}} data-id="{{ $form['id'] }}" onclick="return false;"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+
+                                <table id="mytable" class="table table-sm table-hover border">
+
+                                        <thead>
+                                            <th>No</th>
+                                            <th>Branch</th>
+                                            <th>Link</th>
+                                            <th>QR</th>
+                                            <th>Action</th>
+                                        </thead>
+
+                                        <tbody>
+                                            @foreach($responderlinks as $idx=>$responderlink)
+                                            <tr>
+
+                                                <td>{{++$idx}}</td>
+                                                <td>{{ $responderlink->branch?->branch_name }}</td>
+                                                <td><a target="_blank" href="{{ $responderlink->url }}">{{ $responderlink->url }}</a></td>
+                                                <td><img src="{{ asset($responderlink->image) }}" alt=""></td>
+                                                <td>
+                                                    <a href="javascript:void(0)" class="clipboard-btn" title="Copy Link" data-url="{{ $responderlink->url }}"><i class="far fa-clipboard"></i></a>
+                                                    <a href="{{ asset($responderlink->image) }}" download="{{ $responderlink->branch?->branch_name }}"><i class="fas fa-download"></i></a>
+                                                </td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+
+                                </table>
+
+                            </div>
+
+                            <div class="modal-footer">
+
+                            </div>
+                        </div>
+                </div>
+            </div>
+        <!-- end edit responderlinksmodal -->
      <!-- END MODAL AREA -->
 @endsection
 

@@ -132,6 +132,7 @@ class FormsController extends Controller
             'id' => $form->id,
             'title' => $form->title,
             'description' => $form->description,
+            'collect_branch' => $form->collect_branch,
             'sections' => $form->sections()->orderBy("id",'asc')->get()->map(function ($section) {
                 return [
                     'id' => $section->id,
@@ -155,7 +156,7 @@ class FormsController extends Controller
                 ];
             })->toArray(),
         ];
-        return view("forms.show")->with("form", $formattedForm);
+        return view("forms.show")->with("form", $formattedForm)->with("responderlinks",$form->responderlinks);
 
     }
 

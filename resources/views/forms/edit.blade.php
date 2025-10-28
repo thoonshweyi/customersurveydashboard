@@ -1,7 +1,7 @@
 @extends("layouts.adminindex")
 
 @section("content")
-
+    {{-- @dd($errors) --}}
      <!-- Start Page Content Area -->
      <div id="contentarea" class="container-fluid">
           <div class="col-md-12">
@@ -86,6 +86,7 @@
 
 
                             @foreach ($formattedForm['sections'] as $sectionIndex => $section)
+                                <input type="hidden" name="sections[{{ $sectionIndex }}][id]" value="{{ $section['id'] }}">
                                 <div class="section" data-section-index="{{ $sectionIndex }}" data-question-count="{{ count($section['questions'] ?? []) }}">
                                     <div class="d-flex justify-content-between mt-2">
                                         <h6 class="section-header m-0">Section {{ $sectionIndex + 1 }}</h6>
@@ -129,6 +130,7 @@
                                     <div class="question-container">
                                         @foreach ($section['questions'] ?? [] as $questionIndex => $question)
                                             <div class="csform-card mb-4" data-question-index="{{ $questionIndex }}" data-option-count="{{ count($question['options'] ?? []) }}">
+                                                <input type="hidden" name="sections[{{ $sectionIndex }}][questions][{{ $questionIndex }}][id]" value="{{ $question['id'] }}">
                                                 <div class="row">
                                                     <div class="col-md-8">
                                                         <input
@@ -143,6 +145,7 @@
                                                     <div class="col-md-4">
                                                         <select name="sections[{{ $sectionIndex }}][questions][{{ $questionIndex }}][type]" class="form-select question_type">
                                                             <option value="text" {{ ($question['type'] ?? '') == 'text' ? 'selected' : '' }}>Short Answer</option>
+                                                            <option value="date" {{ ($question['type'] ?? '') == 'date' ? 'selected' : '' }}>Date</option>
                                                             <option value="textarea" {{ ($question['type'] ?? '') == 'textarea' ? 'selected' : '' }}>Paragraph</option>
                                                             <option value="radio" {{ ($question['type'] ?? '') == 'radio' ? 'selected' : '' }}>Multiple Choice</option>
                                                             <option value="checkbox" {{ ($question['type'] ?? '') == 'checkbox' ? 'selected' : '' }}>Checkboxes</option>
@@ -169,6 +172,9 @@
                                                                     case 'text':
                                                                         $optiontext = "<small class='answer-text'>Short answer text</small>";
                                                                         break;
+                                                                    case 'date':
+                                                                        $optiontext = "<small class='answer-text'>mm/dd/yyyy</small>";
+                                                                        break;
                                                                     case 'textarea':
                                                                         $optiontext = "<small class='answer-text'>Long answer text</small>";
                                                                         break;
@@ -181,6 +187,7 @@
                                                             @if (!empty($question['options']))
                                                                 @if($question['type'] != 'rating')
                                                                     @foreach ($question['options'] as $optionIndex =>$option)
+                                                                         <input type="hidden" name="sections[{{ $sectionIndex }}][questions][{{ $questionIndex }}][options][{{ $optionIndex }}][id]" value="{{ $option['id'] }}">
                                                                         <div class="d-flex align-items-center mb-2">
                                                                             <i class="{{ $iconClass }} text-secondary fa-sm"></i>
                                                                             <input
@@ -195,22 +202,23 @@
                                                                         </div>
                                                                     @endforeach
 
-                                                                    @if($question["import_options"] == null)
+                                                                    {{-- @if($question["import_options"] == null) --}}
                                                                     <div class="d-flex align-items-center">
                                                                         <i class="{{ $iconClass }} text-secondary fa-sm"></i>
                                                                         <a class="add-option {{ $addOptionClass }}" href="javascript:void(0)">Add Option</a>
                                                                         <span>or</span>
                                                                         <a href="#importmodal" data-bs-toggle='modal' class="importmodalbtn">Import Questions</a>
                                                                     </div>
-                                                                    @else
+                                                                    {{-- @else
                                                                     <div class="d-flex align-items-center">
                                                                         <i class="{{ $iconClass }} text-secondary fa-sm"></i>
                                                                          <a href="{{ route("questions.refresh",$question['id']) }}" class="importmodalbtn">Refresh options as "{{ $question["import_options"] }}" table</a>
                                                                     </div>
-                                                                    @endif
+                                                                    @endif --}}
                                                                 @elseif ($question['type'] == 'rating')
                                                                     <div class="d-flex justify-content-around align-items-center mb-2">
                                                                             @foreach ($question['options'] as $optionIndex =>$option)
+                                                                             <input type="hidden" name="sections[{{ $sectionIndex }}][questions][{{ $questionIndex }}][options][{{ $optionIndex }}][id]" value="{{ $option['id'] }}">
                                                                             <div class="text-center">
                                                                                 <div class="form-group">
                                                                                         <label>{{$optionIndex + 1}}</label>
@@ -254,7 +262,7 @@
                                 </div>
                             @endforeach
 
-                            @foreach ($formattedForm['sections'] as $sectionIndex => $section)
+                            {{-- @foreach ($formattedForm['sections'] as $sectionIndex => $section)
                                 @if(isset($section['id']))
                                     <input type="hidden" name="sections[{{ $sectionIndex }}][id]" value="{{ $section['id'] }}">
                                 @endif
@@ -270,7 +278,7 @@
                                             @endforeach
                                         @endif
                                 @endforeach
-                            @endforeach
+                            @endforeach --}}
                         </div>
 
                         <div>
@@ -552,6 +560,7 @@
                                         <div class="col-md-4">
                                             <select name="sections[${sectionIndex}][questions][0][type]" id="question_type" class="form-select question_type">
                                                 <option value="text">Short Answer</option>
+                                                <option value="date">Date</option>
                                                 <option value="textarea">Paragraph</option>
                                                 <option value="radio" selected>Multiple Choice</option>
                                                 <option value="checkbox">Checkboxes</option>
@@ -642,6 +651,7 @@
                                 <div class="col-md-4">
                                     <select name="sections[${sectionIndex}][questions][${questionIndex}][type]" id="question_type" class="form-select question_type">
                                         <option value="text">Short Answer</option>
+                                        <option value="date">Date</option>
                                         <option value="textarea">Paragraph</option>
                                         <option value="radio" selected>Multiple Choice</option>
                                         <option value="checkbox">Checkboxes</option>
@@ -659,7 +669,7 @@
                                             class="form-control underline-only option-input options"
                                             placeholder="Option"
                                         />
-                                        <input type="hidden" name="sections[${sectionIndex}][questions][0][options][0][value]" value="" />
+                                        <input type="hidden" name="sections[${sectionIndex}][questions][${questionIndex}][options][0][value]" value="" />
                                     </div>
                                     <div class="d-flex align-items-center">
                                         <i class="far fa-circle text-secondary fa-sm"></i>
@@ -711,6 +721,9 @@
                     switch (questionType) {
                         case "text":
                             html = `<small class="answer-text">Short answer text</small>`;
+                            break;
+                        case "date":
+                            html = `<small class="answer-text">mm/dd/yyyy</small>`;
                             break;
 
                         case "textarea":
@@ -855,7 +868,7 @@
                                 class="form-control underline-only option-input options"
                                 placeholder="Option"
                             />
-                            <input type="hidden" name="sections[${sectionIndex}][questions][0][options][${optionIndex}][value]" value=""/>
+                            <input type="hidden" name="sections[${sectionIndex}][questions][${questionIndex}][options][${optionIndex}][value]" value=""/>
                         </div>
                     `;
 

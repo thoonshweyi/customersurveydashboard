@@ -214,6 +214,7 @@ class FormsController extends Controller
 
 
     public function update(Request $request, string $id) {
+        // dd($request);
         $this->validate($request, [
             "title" => "required",
             "description" => "required",
@@ -323,7 +324,7 @@ class FormsController extends Controller
             return redirect()->route('forms.index')->with('success', 'Form updated successfully');
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug($e->getMessage());
+            Log::info($e->getMessage());
             return redirect()->route('forms.edit', $id)->withInput()->with('error', 'Failed to update form!');
         }
     }
@@ -419,7 +420,7 @@ class FormsController extends Controller
 
                 }
             }elseif($collect_branch == 4){
-                $url = env('FRONTEND_URL') . "/surveyresponses/{$form->id}/create";
+                $url = env('FRONTEND_URL') . "/surveyresponses/{$form->id}/7/create";
                 $responderlink = ResponderLink::create([
                     "form_id" => $form->id,
                     "branch_id" => 0,

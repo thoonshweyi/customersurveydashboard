@@ -124,6 +124,7 @@
                                                     <div class="col-md-4">
                                                         <select name="sections[{{ $sectionIndex }}][questions][{{ $questionIndex }}][type]" class="form-select question_type">
                                                             <option value="text" {{ ($question['type'] ?? '') == 'text' ? 'selected' : '' }}>Short Answer</option>
+                                                            <option value="date" {{ ($question['type'] ?? '') == 'date' ? 'selected' : '' }}>Date</option>
                                                             <option value="textarea" {{ ($question['type'] ?? '') == 'textarea' ? 'selected' : '' }}>Paragraph</option>
                                                             <option value="radio" {{ ($question['type'] ?? '') == 'radio' ? 'selected' : '' }}>Multiple Choice</option>
                                                             <option value="checkbox" {{ ($question['type'] ?? '') == 'checkbox' ? 'selected' : '' }}>Checkboxes</option>
@@ -445,6 +446,7 @@
                                         <div class="col-md-4">
                                             <select name="sections[${sectionIndex}][questions][0][type]" id="question_type" class="form-select question_type">
                                                 <option value="text">Short Answer</option>
+                                                <option value="date">Date</option>
                                                 <option value="textarea">Paragraph</option>
                                                 <option value="radio" selected>Multiple Choice</option>
                                                 <option value="checkbox">Checkboxes</option>
@@ -535,6 +537,7 @@
                                 <div class="col-md-4">
                                     <select name="sections[${sectionIndex}][questions][${questionIndex}][type]" id="question_type" class="form-select question_type">
                                         <option value="text">Short Answer</option>
+                                        <option value="date">Date</option>
                                         <option value="textarea">Paragraph</option>
                                         <option value="radio" selected>Multiple Choice</option>
                                         <option value="checkbox">Checkboxes</option>

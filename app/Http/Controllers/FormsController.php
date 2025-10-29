@@ -214,6 +214,7 @@ class FormsController extends Controller
 
 
     public function update(Request $request, string $id) {
+        // dd($request);
         $this->validate($request, [
             "title" => "required",
             "description" => "required",
@@ -323,7 +324,7 @@ class FormsController extends Controller
             return redirect()->route('forms.index')->with('success', 'Form updated successfully');
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug($e->getMessage());
+            Log::info($e->getMessage());
             return redirect()->route('forms.edit', $id)->withInput()->with('error', 'Failed to update form!');
         }
     }
@@ -390,7 +391,6 @@ class FormsController extends Controller
     }
 
     public function responderlinks(Request $request){
-        // dd('anonymous');
 
         DB::beginTransaction();
         try{
@@ -419,7 +419,7 @@ class FormsController extends Controller
 
                 }
             }elseif($collect_branch == 4){
-                $url = env('FRONTEND_URL') . "/surveyresponses/{$form->id}/create";
+                $url = env('FRONTEND_URL') . "/surveyresponses/{$form->id}/7/create";
                 $responderlink = ResponderLink::create([
                     "form_id" => $form->id,
                     "branch_id" => 0,
@@ -457,6 +457,28 @@ class FormsController extends Controller
 
         return $filepath;
     }
+
+    public function notifications(Request $request){
+        DB::beginTransaction();
+        try{
+            $form = Form::findOrFail($request["id"]);
+            $form->email_noti = $request->email_noti ?? '4';
+            $form->collector_email = $request["collector_email"];
+            $form->save();
+
+
+
+            DB::commit();
+
+
+            return redirect()->back();
+        }catch(Exception $e){
+            DB::rollBack();
+            Log::debug($e->getMessage());
+            return response()->json(["status"=>"failed","message"=>$e->getMessage()]);
+        }
+    }
+
 }
 
 

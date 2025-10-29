@@ -19,6 +19,8 @@ class Form extends Model
         'description',
         'status_id',
         'user_id',
+        'email_noti',
+        'collector_email'
     ];
 
 

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\SurveyResponse;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\SurveyResponsesExport;
+use App\Jobs\SurveyResponseMailBoxJob;
 
 class SurveyResponsesController extends Controller
 {
@@ -71,6 +72,19 @@ class SurveyResponsesController extends Controller
         $response = Excel::download(new SurveyResponsesExport($surveyresponses,$form_id), "SurveyResponses".Carbon::now()->format('Y-m-d').".xlsx");
 
         return $response;
+
+    }
+
+
+    public function emailnotifications(Request $request){
+        $data = [
+            "to" => $request["cmpemail"] ?? "thoonlay779@gmail.com",
+            "subject" => $request["cmpsubject"] ?? "PRO CV Form Received",
+            "surveyresponse" => SurveyResponse::find(2),
+            "content" => $request["cmpcontent"] ?? "For HR Team"
+        ];
+                              
+        dispatch(new SurveyResponseMailBoxJob($data));
 
     }
 }

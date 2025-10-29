@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use App\Jobs\SurveyResponseMailBoxJob;
 
 class SurveyResponsesController extends Controller
 {
@@ -85,6 +86,18 @@ class SurveyResponsesController extends Controller
                 }
             }
             DB::commit();
+
+            $form = $surveyresponse->form;
+            // Email Notification
+            // $data = [
+            //     "to" =>  $form->collector_email,
+            //     "subject" => "New '$form->name Response Received",
+                //  "form" => $form
+            //     "content" => $request["cmpcontent"] ?? "For HR Team"
+            // ];
+                              
+            // dispatch(new SurveyResponseMailBoxJob($data));
+
             return response()->json(['message' => 'Answers saved successfully',"surveyresponse"=>$surveyresponse]);
         }catch (Exception $e) {
             DB::rollBack();
@@ -159,4 +172,6 @@ class SurveyResponsesController extends Controller
 
         return $responder;
     }
+
+    
 }

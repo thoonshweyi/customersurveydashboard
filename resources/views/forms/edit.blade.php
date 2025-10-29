@@ -39,6 +39,7 @@
                 <div class="form-tools">
                     <a target="_blank" href="{{ route("forms.show",$form['id']) }}" class="toolboxitems add-btn text-info" title="Preview"><i class="fas fa-eye"></i></a>
                     <a href="#responderlinksmodal" data-bs-toggle="modal" class="toolboxitems add-btn text-secondary" title="Responder Links"><i class="fas fa-link"></i></a>
+                    <a href="#notificationsmodal" data-bs-toggle="modal" class="toolboxitems add-btn text-secondary" title="Notifications"><i class="fas fa-bell"></i></a>
                 </div>
 
                 <div class="container csform-container mt-0">
@@ -400,6 +401,56 @@
                             </div>
                     </div>
                 </div>
+            <!-- end edit responderlinksmodal -->
+
+
+           <!-- start edit notificationsmodal -->
+            <div id="notificationsmodal" class="modal fade">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h6 class="modal-title">Notification Modal</h6>
+                                <button type="" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+
+                            <div class="modal-body">
+                                <form id="formaction" action="{{ route("forms.notifications") }}" method="POST">
+                                    @csrf
+                                    @method('PUT')
+                                    <input type="hidden" name="id" value="{{ $form['id'] }}">
+                                    <div class="row align-items-end">
+                                        <div class="d-flex justify-content-between aligh-items-center">
+                                            <div>
+                                                <label for="">Email Notification</label>
+                                                <p><small>Email notification will be sent to following address.</small></p>
+                                            </div>
+                                            <div class="form-checkbox form-switch">
+                                                <input type="checkbox" name="email_noti" class="form-check-input notifications-btn" {{  $form["email_noti"] === 3 ? 'checked' : ''}} data-id="{{ $form['id'] }}" value="3"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <input type="email" name="collector_email" id="" class="form-control" placeholder="Enter Collector Email" value="{{ $form->collector_email }}"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12 d-flex justify-content-end mt-2">
+                                             <button type="submit" class="btn btn-primary btn-sm rounded-0">Update</button>
+                                        </div>
+                                    </div>
+                                </form>
+
+
+
+                            </div>
+
+                            <div class="modal-footer">
+
+                            </div>
+                        </div>
+                </div>
+            </div>
             <!-- end edit responderlinksmodal -->
      <!-- END MODAL AREA -->
 @endsection
@@ -1101,6 +1152,22 @@
                             });
                          }
                     });
+               });
+               // End change btn
+
+                  //Start change-btn
+               $(document).on("change",".notifications-btn",function(){
+
+                    var getid = $(this).data("id");
+                     console.log(getid); // 1 2
+
+                    var setstatus = $(this).prop("checked") === true ? 3 : 4;
+                    {{-- // console.log(setstatus); // 3 4 --}}
+
+                    $(this).val(setstatus);
+
+
+
                });
                // End change btn
 

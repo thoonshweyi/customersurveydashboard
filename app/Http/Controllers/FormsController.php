@@ -391,7 +391,6 @@ class FormsController extends Controller
     }
 
     public function responderlinks(Request $request){
-        // dd('anonymous');
 
         DB::beginTransaction();
         try{
@@ -458,6 +457,28 @@ class FormsController extends Controller
 
         return $filepath;
     }
+
+    public function notifications(Request $request){
+        DB::beginTransaction();
+        try{
+            $form = Form::findOrFail($request["id"]);
+            $form->email_noti = $request->email_noti ?? '4';
+            $form->collector_email = $request["collector_email"];
+            $form->save();
+
+
+
+            DB::commit();
+
+
+            return redirect()->back();
+        }catch(Exception $e){
+            DB::rollBack();
+            Log::debug($e->getMessage());
+            return response()->json(["status"=>"failed","message"=>$e->getMessage()]);
+        }
+    }
+
 }
 
 

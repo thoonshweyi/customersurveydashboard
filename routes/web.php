@@ -61,11 +61,13 @@ Route::middleware('auth')->group(function () {
     Route::resource('forms',FormsController::class);
     Route::get('forms/{id}/report',[FormsController::class,"report"])->name('forms.report');
     Route::get('formsresponderlinks',[FormsController::class,"responderlinks"])->name('forms.responderlinks');
+    Route::put('formsnotifications',[FormsController::class,"notifications"])->name('forms.notifications');
 
 
     Route::resource('surveyresponses',SurveyResponsesController::class);
     Route::get('surveyresponsesdashboard/{form_id}',[SurveyResponsesController::class,"dashboard"])->name("surveyresponsesdashboard");
     Route::get('surveyresponsesexport/{form_id}',[SurveyResponsesController::class,"export"])->name("surveyresponsesexport");
+    Route::get('surveyresponsesemailnotifications',[SurveyResponsesController::class,"emailnotifications"])->name('forms.emailnotifications');
 
     Route::get('questions/{id}/refresh',[QuestionsController::class,"refresh"])->name("questions.refresh");
 

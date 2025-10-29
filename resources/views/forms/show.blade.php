@@ -278,7 +278,7 @@
      <script src="{{ asset('assets/libs/summernote-0.8.18-dist/summernote-lite.min.js') }}" type="text/javascript"></script>
      <script type="text/javascript">
           $(document).ready(function(){
-                const id = {{  request()->route('id') }}
+                const id = {{ $form['id'] }}
                 $.ajax({
                     url: `/api/formsreport/${id}`,
                     method: 'GET',

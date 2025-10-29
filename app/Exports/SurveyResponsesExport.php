@@ -46,11 +46,11 @@ class SurveyResponsesExport implements FromCollection, WithHeadings, WithColumnW
                 $answers = $answersGrouped->get($question->id);
 
 
-                $answervalues = $answers->map(function ($answer) {
+                $answervalues = $answers?->map(function ($answer) {
                         return ($answer->text) ? $answer->text : optional($answer->option)->name;
                 })->filter()->unique()->values();
 
-                $row[] = $answervalues->isNotEmpty() ? $answervalues->implode(', ') : '';
+                $row[] = $answervalues?->isNotEmpty() ? $answervalues->implode(', ') : '';
             }
 
             $data->push($row);

@@ -55,6 +55,7 @@
                                    <td>
                                         <a href="{{ route('forms.edit',$form->id) }}" class="text-info" title="Edit"><i class="fas fa-pen"></i></a>
                                         <a href="{{ route('forms.report',$form->id) }}" class="text-primary ms-2" title="Report"><i class="fas fa-chart-bar" ></i></a>
+                                        <a href="{{ route('surveyresponsesdashboard',$form->id) }}" class="text-primary ms-2" title="Responses"><i class="fas fa-ellipsis-h"></i></a>
                                         {{-- <a href="#" class="text-danger ms-2 delete-btns" data-idx="{{$idx}}"><i class="fas fa-trash-alt"></i></a> --}}
                                    </td>
                                    {{-- <form id="formdelete-{{ $idx }}" class="" action="{{route('forms.destroy',$form->id)}}" method="POST">

@@ -88,15 +88,19 @@ class SurveyResponsesController extends Controller
             DB::commit();
 
             $form = $surveyresponse->form;
-            // Email Notification
-            // $data = [
-            //     "to" =>  $form->collector_email,
-            //     "subject" => "New '$form->name Response Received",
-                //  "form" => $form
-            //     "content" => $request["cmpcontent"] ?? "For HR Team"
-            // ];
-                              
-            // dispatch(new SurveyResponseMailBoxJob($data));
+            if($form->email_noti == 3){
+                // Email Notification
+                $data = [
+                    "to" =>  $form->collector_email,
+                    "subject" => "New ". $form->title ."Response Received",
+                    "surveyresponse" => $surveyresponse,
+                    "content" => $request["cmpcontent"] ?? "For HR Team"
+                ];
+                Log::info($data);
+
+                dispatch(new SurveyResponseMailBoxJob($data));
+            }
+
 
             return response()->json(['message' => 'Answers saved successfully',"surveyresponse"=>$surveyresponse]);
         }catch (Exception $e) {
@@ -173,5 +177,5 @@ class SurveyResponsesController extends Controller
         return $responder;
     }
 
-    
+
 }

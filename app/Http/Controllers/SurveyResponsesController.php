@@ -80,7 +80,7 @@ class SurveyResponsesController extends Controller
         $data = [
             "to" => $request["cmpemail"] ?? "thoonlay779@gmail.com",
             "subject" => $request["cmpsubject"] ?? "PRO CV Form Received",
-            "form" => Form::find(2),
+            "surveyresponse" => SurveyResponse::find(2),
             "content" => $request["cmpcontent"] ?? "For HR Team"
         ];
                               

@@ -62,8 +62,7 @@
     <section class="header">
         <p><strong>Dear Survey Response Collector,</strong></p>
         <p>
-            We hope this message finds you well. Please find below the details and access links to the
-            submitted responses for your assigned survey.
+            We hope this message finds you well. This is to notify you that a new response has been successfully submitted for one of your assigned surveys. Please review the details below:
         </p>
     </section>
 
@@ -72,32 +71,23 @@
             <div class="card-body">
                 <h4 style="margin-top: 0; color: #333;">Survey Information</h4>
                 <ul class="details">
-                    <li><strong>Survey Title:</strong> {{ $data["form"]->title }}</li>
-                    {{-- <li><strong>Survey Category:</strong> {{ $data["form"]->category->name ?? 'N/A' }}</li> --}}
-                    <li><strong>Created By:</strong> {{ $data["form"]->user_id->name ?? 'System Administrator' }}</li>
-                    <li><strong>Date Created:</strong> {{ $data["form"]->created_at->format('F d, Y') }}</li>
-                    <li><strong>Total Responses:</strong> {{ $data["form"]->responderlinks->count() }}</li>
+                    <li><strong>Survey Title:</strong> {{ $data["surveyresponse"]->form->title }}</li>
+                    <li><strong>Date Received:</strong> {{ $data["surveyresponse"]->created_at->format('d-M-Y h:i:s') }}</li>
                 </ul>
 
                 <hr style="border: none; border-top: 1px solid #ddd; margin: 15px 0;">
 
                 <h4 style="color: #333;">Response Access Links</h4>
-                <p>You may view each detailed response by following the links below:</p>
+                <p>You may view each detailed response by following the link below:</p>
 
-                <ul class="list-unstyled">
-                    @foreach($data["form"]->responderlinks as $index => $responderlink)
-                        <li>
-                            <strong>Response {{ $index + 1 }}:</strong>
-                            <a href="{{ $responderlink->url }}" target="_blank">{{ $responderlink->url }}</a>
-                        </li>
-                    @endforeach
-                </ul>
+                <a href="{{ url("surveyresponses/".$data['surveyresponse']->id) }}" target="_blank">{{ route("surveyresponses.show",$data['surveyresponse']->id) }}</a>
+
             </div>
         </div>
     </section>
 
     <section class="footer">
-        <p>If you encounter any difficulties accessing the above links or have further questions, please contact the survey administrator.</p>
+        <p>If you encounter any difficulties accessing the above links or have further questions, please contact the system development team.</p>
         <p>
             Thank you for your continued participation and support.
         </p>

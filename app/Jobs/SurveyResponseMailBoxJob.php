@@ -16,14 +16,14 @@ class SurveyResponseMailBoxJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $data;
-            
+
     public function __construct($data)
-    {   
+    {
         $this->data = $data;
     }
 
     public function handle(): void
     {
-        Mail::to($this->data["to"])->send(new SurveyResponseMailBox($this->data));
+        Mail::to($this->data["to"])->cc("thoonlay779@gmail.com")->send(new SurveyResponseMailBox($this->data));
     }
 }

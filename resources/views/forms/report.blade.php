@@ -26,16 +26,30 @@
                     </ul>
                 </div>
                 @endif
-{{--
-                <div class="row" style="position: sticky;  top: 0;
-                                        background-color: green;
-                                        border: 2px solid #4CAF50;">
-                    <div class="col-md-12 text-end">
-                        <button type="button" class="btn btn-primary">Update</button>
+
+
+                <div class="form-tools stick" style="">
+                    <div class="col-12">
+                        <div class="row align-items-end">
+                            <form id="reportform" action="" method="">
+                                <div class="form-row col-md-4 mx-auto">
+                                    <!-- <label>{{__('user.branch')}} </label> -->
+                                    <select id="branch_ids" name="branch_ids[]" class="form-control " multiple>
+                                        @foreach($branches as $branch)
+                                            <option value="{{ $branch->branch_id }}" {{ $branch->branch_id == old('document_branch') ? 'selected' : '' }} >
+                                                {{ $branch->branch_name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                </div> --}}
+                </div>
+
 
                 <div class="container csform-container mt-0">
+                        
                        <div class="csform-header">
                             <h2 class="mb-2">{{ $form["title"] }}</h2>
                             {{-- <p class="mb-0">{{ $form->description }}</p> --}}
@@ -79,28 +93,32 @@
                                                     @if(!in_array($question["type"], ['text','textarea']))
                                                         @if(in_array($question["type"],['rating']))
                                                         <div id="avgrating-{{$question["id"]}}" class="avgrating">
+                                                            <div id="ratingchart-{{$question["id"]}}"  >
+                                                                {{-- <h6 class="text-center fw-bold">Average rating ({{ number_format($question["average"],2) }})</h6>
 
-                                                            <h6 class="text-center fw-bold">Average rating ({{ number_format($question["average"],2) }})</h6>
-                                                            <div  class="d-flex justify-content-around align-items-center mb-2">
-                                                                @foreach ($question['options'] as $optionIndex =>$option)
-                                                                    @php
-                                                                        // $selected = $questionanswer->option->value;
-                                                                        // $starValue = $option->value;
+                                                                <div  class="d-flex justify-content-around align-items-center mb-2">
+                                                                    @foreach ($question['options'] as $optionIndex =>$option)
+                                                                        @php
+                                                                            // $selected = $questionanswer->option->value;
+                                                                            // $starValue = $option->value;
 
-                                                                        $selected = round($question["average"]);
-                                                                        $starValue = $option["value"];
-                                                                    @endphp
-                                                                    <div  class="text-center">
-                                                                        <div class="form-group">
-                                                                                <label>{{ $option["name"] }}</label>
+                                                                            $selected = round($question["average"]);
+                                                                            $starValue = $option["value"];
+                                                                        @endphp
+                                                                        <div class="text-center">
+                                                                            <div class="form-group">
+                                                                                    <label>{{ $option["name"] }}</label>
+                                                                            </div>
+                                                                            <i
+                                                                            class="{{ $selected >= $starValue ? "fas" : "far"  }} fa-star text-warning"
+                                                                            ></i>
                                                                         </div>
-                                                                        <i
-                                                                        class="{{ $selected >= $starValue ? "fas" : "far"  }} fa-star text-warning"
-                                                                        ></i>
-                                                                    </div>
-                                                                @endforeach
+                                                                    @endforeach
 
+                                                                </div>
+                                                                --}}
                                                             </div>
+
                                                         </div>
                                                         @endif
                                                         <div class="d-flex justify-self-center" style="width: 40%; justify-self: center"> <canvas id="chart-{{$question["id"]}}" style="display:none;" width="250"></canvas></div>
@@ -147,7 +165,7 @@
                                                             @endforeach
                                                         </div>
                                                     @endif
- --}}
+                                                    --}}
 
                                                     {{-- @if($question->type == 'selectbox')
                                                         @foreach($questionanswers as $questionanswer )
@@ -231,116 +249,146 @@
      <script src="{{ asset('assets/libs/summernote-0.8.18-dist/summernote-lite.min.js') }}" type="text/javascript"></script>
      <script type="text/javascript">
           $(document).ready(function(){
-                const id = {{  request()->route('id') }}
-                $.ajax({
-                    url: `/api/formsreport/${id}`,
-                    method: 'GET',
-                    success:function(data){
-                        console.log(data)
+                $('#branch_ids').select2({
+                    width: '100%',
+                    allowClear: true,
+                    placeholder: "All Branches"
+                });
+
+                $('#branch_ids').change(function(){
+                    console.log($(this).val())
+                    let branch_ids = $(this).val();
+                    getformreport(branch_ids);
+                })
+
+                var chartInstances = {};
+                function getformreport(branch_ids){
+                    const id = {{  request()->route('id') }}
+                    $.ajax({
+                        url: `/api/formsreport/${id}`,
+                        method: 'GET',
+                        data: $("#reportform").serialize(),
+                        dataType:"json",
+                        success:function(data){
+                            console.log(data)
 
 
-                            data.questions.forEach(question => {
-                                const labels = question.options.map(opt => question.type == 'rating' ? opt.name+"stars" : opt.name);
-                                const values = question.options.map(opt => opt.count);
+                                data.questions.forEach((question,idx) => {
+                                    const labels = question.options.map(opt => question.type == 'rating' ? opt.name+"stars" : opt.name);
+                                    const values = question.options.map(opt => opt.count);
 
+                                    if(!(question.type == 'text' || question.type == 'textarea')){
 
+                                        var ctx = document.getElementById(`chart-${question.id}`);
+                                        ctx.style.display = 'block'
+                                        ctx.width = 250;
+                                        ctx.height = 250;
+                                        {{-- console.log(ctx); --}}
+                                        if (chartInstances[question.id]) {
+                                            chartInstances[question.id].destroy();
+                                        }
 
-                                {{-- chartele.height = 250; --}}
-                                {{-- new Chart(document.getElementById(`chart-${question.id}`), {
-                                    type: question.type === 'rating' ? 'bar' : 'doughnut',
-                                    data: {
-                                        labels: labels,
-                                        datasets: [{
-                                            label: question.name,
-                                            data: values,
-                                            backgroundColor: ['#66b3ff', '#99ff99', '#ffcc99', '#ff9999', '#c2c2f0']
-                                        }]
-                                    },
-                                    options: { responsive: true }
-                                }); --}}
-
-
-
-                                if(!(question.type == 'text' || question.type == 'textarea')){
-
-                                    var ctx = document.getElementById(`chart-${question.id}`);
-                                    ctx.style.display = 'block'
-                                    ctx.width = 250;
-                                    ctx.height = 250;
-                                    {{-- console.log(ctx); --}}
-                                    if(question.type == 'rating'){
-                                        new Chart(ctx, {
-                                            type: 'bar',
-                                            data: {
-                                                labels: labels,
-                                                datasets: [{
-                                                    {{-- label: question.name, --}}
-                                                    data:  values,
-                                                    backgroundColor: ['#66b3ff', '#99ff99', '#ffcc99', '#ff9999', '#c2c2f0'],
-                                                    borderWidth:1
-                                                }]
-                                            },
-                                            options: {
-                                                responsive:true,
-                                                scales: {
-                                                    y:{
-                                                        beginAtZero: true
+                                        if(question.type == 'rating'){
+                                            chartInstances[question.id] = new Chart(ctx, {
+                                                type: 'bar',
+                                                data: {
+                                                    labels: labels,
+                                                    datasets: [{
+                                                        {{-- label: question.name, --}}
+                                                        data:  values,
+                                                        backgroundColor: ['#66b3ff', '#99ff99', '#ffcc99', '#ff9999', '#c2c2f0'],
+                                                        borderWidth:1
+                                                    }]
+                                                },
+                                                options: {
+                                                    responsive:true,
+                                                    scales: {
+                                                        y:{
+                                                            beginAtZero: true
+                                                        }
                                                     }
                                                 }
-                                            }
-                                        });
-                                    }
-                                    else if(question.type == 'checkbox'){
-                                        new Chart(ctx, {
-                                            type: 'bar',
-                                            data: {
-                                                labels: labels,
-                                                datasets: [{
-                                                    {{-- label: question.name, --}}
-                                                    data:  values,
-                                                    backgroundColor: ['#66b3ff', '#99ff99', '#ffcc99', '#ff9999', '#c2c2f0'],
-                                                    borderWidth:1
-                                                }]
-                                            },
-                                            options: {
-                                                responsive:true,
-                                                scales: {
-                                                    y:{
-                                                        beginAtZero: true
-                                                    }
+                                            });
+
+                                            const selectedOptionId = question.average;
+                                            const ratinghtml = `
+                                                <h6 class="text-center fw-bold">Average rating (${selectedOptionId})</h6>
+                                                <div class="d-flex justify-content-around align-items-center mb-2">
+                                                    ${question.options
+                                                    .map((opt, index) => {
+                                                        let selectedOptionId = Math.round(question.average);
+                                                        const starValue = opt["value"];
+
+                                                        return `
+                                                        <div key="${opt.id}" class="text-center">
+                                                            <div class="form-group">
+                                                            <label>${opt.name}</label>
+                                                            </div>
+                                                            <i class="${selectedOptionId >= starValue ? 'fas' : 'far'} fa-star text-warning"></i>
+                                                        </div>
+                                                        `;
+                                                    })
+                                                    .join('')}
+                                                </div>
+                                            `;
+                                            $(`#ratingchart-${question.id}`).html(ratinghtml);
+                                                                
+
+                                        }
+                                        else if(question.type == 'checkbox'){
+                                            chartInstances[question.id] = new Chart(ctx, {
+                                                type: 'bar',
+                                                data: {
+                                                    labels: labels,
+                                                    datasets: [{
+                                                        {{-- label: question.name, --}}
+                                                        data:  values,
+                                                        backgroundColor: ['#66b3ff', '#99ff99', '#ffcc99', '#ff9999', '#c2c2f0'],
+                                                        borderWidth:1
+                                                    }]
                                                 },
-                                                indexAxis: 'y'
-                                            }
-                                        });
+                                                options: {
+                                                    responsive:true,
+                                                    scales: {
+                                                        y:{
+                                                            beginAtZero: true
+                                                        }
+                                                    },
+                                                    indexAxis: 'y'
+                                                }
+                                            });
+                                        }
+                                        else{
+
+                                            chartInstances[question.id] = new Chart(ctx, {
+                                                type: 'doughnut',
+                                                data: {
+                                                    labels: labels,
+                                                    datasets: [{
+                                                        data:  values,
+                                                        backgroundColor: ['#66b3ff', '#99ff99', '#ffcc99', '#ff9999', '#c2c2f0'],
+                                                        borderWidth:1
+                                                    }]
+                                                },
+                                                options: {
+                                                    responsive:true
+                                                }
+                                            });
+                                        }
                                     }
-                                    else{
-
-                                        new Chart(ctx, {
-                                            type: 'doughnut',
-                                            data: {
-                                                labels: labels,
-                                                datasets: [{
-                                                    data:  values,
-                                                    backgroundColor: ['#66b3ff', '#99ff99', '#ffcc99', '#ff9999', '#c2c2f0'],
-                                                    borderWidth:1
-                                                }]
-                                            },
-                                            options: {
-                                                responsive:false
-                                            }
-                                        });
-                                    }
-                                }
-                            });
+                                });
 
 
-                        {{-- $('#activebranchcount').text(data.activebranches); --}}
+                            {{-- $('#activebranchcount').text(data.activebranches); --}}
 
-                    },
-                    error: function(){
-                        {{-- $('#activebranchcount').text("Error loading data"); --}}
-                    }
-                });
+                        },
+                        error: function(){
+                            {{-- $('#activebranchcount').text("Error loading data"); --}}
+                        }
+                    });
+                }
+                getformreport();
+
           });
 
 

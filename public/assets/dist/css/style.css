@@ -440,6 +440,11 @@ a {
     /* border-radius: 10px; */
     margin-bottom: 12px;
 }
+.form-tools.stick{
+        position: sticky;
+        top: 50px; /* distance from the top of the page */
+        z-index: 1000; /* keep above other elements */
+}
 /* End Customer Survey Form */
 
 

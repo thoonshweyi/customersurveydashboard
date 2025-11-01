@@ -21,4 +21,8 @@ class Answer extends Model
         return $this->belongsTo(Option::class,"option_id","id");
     }
 
+    public function surveyresponse(){
+        return $this->belongsTo(SurveyResponse::class,"survey_response_id","id");
+    }
+
 }

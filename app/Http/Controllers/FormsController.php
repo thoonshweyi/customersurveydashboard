@@ -333,6 +333,9 @@ class FormsController extends Controller
     public function report(Request $request,$id){
 
         $form = Form::find($id);
+        $branches = Branch::where("status_id", $id)->get();
+
+        
         $formattedForm = [
             'id' => $form->id,
             'title' => $form->title,
@@ -369,7 +372,7 @@ class FormsController extends Controller
                 ];
             })->toArray(),
         ];
-        return view("forms.report")->with("form", $formattedForm);
+        return view("forms.report")->with("form", $formattedForm)->with("branches",$branches);
 
     }
 

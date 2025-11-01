@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Form;
+use App\Models\Answer;
+use App\Models\Branch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -81,23 +83,33 @@ class FormsController extends Controller
     }
 
 
-    public function report(string $id){
+    public function report(Request $request,string $id){
         $form = Form::find($id);
+        $branch_ids = $request->branch_ids ?? Branch::get()->pluck('branch_id');
+        // dd($branch_ids);
 
+        // $optionCounts = DB::table('answers')
+        //                     ->select('option_id', DB::raw('COUNT(*) as total'))
+        //                     ->groupBy('option_id')
+        //                     //->get(); 
+        //                     ->pluck('total','option_id');
         $optionCounts = DB::table('answers')
-        ->select('option_id', DB::raw('COUNT(*) as total'))
-        ->groupBy('option_id')
-        // ->get();
-        ->pluck('total','option_id');
+            ->select('answers.option_id', DB::raw('COUNT(*) as total'))
+            ->join('survey_responses', 'answers.survey_response_id', '=', 'survey_responses.id')
+            ->whereIn('survey_responses.branch_id', $branch_ids)
+            ->groupBy('answers.option_id')
+            ->pluck('total', 'answers.option_id');
 
         $results = [
-            'questions' => $form->questions()->orderBy("id",'asc')->get()->map(function ($question)  use ($optionCounts) {
+            'questions' => $form->questions()->orderBy("id",'asc')->get()->map(function ($question)  use ($optionCounts,$branch_ids) {
                     $average = null;
 
                     if ($question->type === 'rating') {
                         $average = DB::table('answers')
                         ->join('options', 'answers.option_id', '=', 'options.id')
                         ->where('answers.question_id', $question->id)
+                        ->join('survey_responses', 'answers.survey_response_id', '=', 'survey_responses.id')
+                        ->whereIn('survey_responses.branch_id', $branch_ids)
                         ->avg(DB::raw('CAST(options.value AS NUMERIC)'));
                     }
                     return [

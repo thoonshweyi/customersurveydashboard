@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('options', function (Blueprint $table) {
-            $table->unsignedBigInteger('sorting')->default(1);
+        Schema::table('questions', function (Blueprint $table) {
+            $table->string("en_name")->nullable();
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('options', function (Blueprint $table) {
-            $table->dropColumn("sorting");
+        Schema::table('questions', function (Blueprint $table) {
+            $table->dropColumn("en_name");
         });
     }
 };

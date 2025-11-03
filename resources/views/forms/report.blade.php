@@ -371,7 +371,7 @@
                                                     }]
                                                 },
                                                 options: {
-                                                    responsive:true
+                                                    responsive:true,
                                                 }
                                             });
                                         }

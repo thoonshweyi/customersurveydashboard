@@ -168,12 +168,16 @@ class SurveyResponsesController extends Controller
         foreach ($questionAnswers as $questionId => $answerValue) {
             if (isset($questions[$questionId])) {
                 $fieldName = Str::slug($questions[$questionId]->name);
+                $fieldNameEn = Str::slug($questions[$questionId]->en_name);
                 if (in_array($fieldName, $fillableFields)) {
                     $responder[$fieldName] = $answerValue;
+                }else if(in_array($fieldNameEn, $fillableFields)){
+                    $responder[$fieldNameEn] = $answerValue;
                 }
             }
         }
 
+        Log::info($responder);
         return $responder;
     }
 

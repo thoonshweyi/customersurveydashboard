@@ -48,9 +48,10 @@ class FormsController extends Controller
                         return [
                             'id' => $question->id,
                             'name' => $question->name,
+                            'en_name' => $question->en_name,
                             'type' => $question->type,
                             'required' => $question->required,
-                            'options' => $question->options()->orderBy("id",'asc')->get()->map(function ($option) {
+                            'options' => $question->options()->orderBy('sorting', 'asc')->orderBy("id",'asc')->get()->map(function ($option) {
                                 return [
                                     'id' => $option->id,
                                     'name' => $option->name,
@@ -118,7 +119,7 @@ class FormsController extends Controller
                         'type' => $question->type,
                         'required' => $question->required,
                         'average' => round($average, 2),
-                        'options' => $question->options()->orderBy("id",'asc')->get()->map(function ($option) use ($optionCounts) {
+                        'options' => $question->options()->orderBy('sorting', 'asc') ->orderBy("id",'asc')->get()->map(function ($option) use ($optionCounts) {
                             return [
                                 'id' => $option->id,
                                 'name' => $option->name,

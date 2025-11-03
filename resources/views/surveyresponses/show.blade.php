@@ -48,7 +48,7 @@
 
                         <div class="section-container">
 
-                            @foreach ($form['sections'] as $sectionIndex => $section)
+                            @foreach ($form->sections()->orderBy("id",'asc')->get() as $sectionIndex => $section)
                                 <div class="section" data-section-index="{{ $sectionIndex }}" data-question-count="{{ count($section['questions'] ?? []) }}">
 
                                     <div class="d-flex justify-content-between mt-2">
@@ -62,7 +62,7 @@
                                     </div>
 
                                     <div class="question-container">
-                                        @foreach ($section['questions'] ?? [] as $questionIndex => $question)
+                                        @foreach ($section->questions()->orderBy("id",'asc')->get() ?? [] as $questionIndex => $question)
                                                 <div class="csform-card mb-4">
                                                     <label class="form-label">{{ $question->name }} <span class="text-danger">*</span></label>
 
@@ -76,8 +76,22 @@
                                                         @endforeach
                                                     @endif
 
+                                                    @if($question["type"] == 'date')
+                                                        @foreach($surveyresponse->questionanswers($question->id) as $questionanswer )
+                                                                <input
+                                                                    class="form-control"
+                                                                    type={{$question->type}}
+                                                                    name={{$question->id}}
+                                                                    value={{ $questionanswer->text }}
+                                                                    readonly
+                                                                    onclick="return false;"
+                                                                />
+                                                         @endforeach
+                                                    @endif
+
+
                                                     @if($question->type == 'checkbox' || $question->type == 'radio' )
-                                                         @foreach ($question['options'] as $optionIndex =>$option)
+                                                         @foreach ($question->options()->orderBy('sorting', 'asc')->orderBy("id",'asc')->get()  as $optionIndex =>$option)
                                                             <div key={{ $option->id }} class="form-check">
                                                                 <input
                                                                     class="form-check-input"
@@ -99,7 +113,7 @@
                                                     @if($question->type == 'rating' )
                                                         <div class="d-flex justify-content-around align-items-center mb-2">
                                                             @foreach($questionanswers as $questionanswer )
-                                                                @foreach ($question['options'] as $optionIndex =>$option)
+                                                                @foreach ($question->options()->orderBy('sorting', 'asc')->orderBy("id",'asc')->get() as $optionIndex =>$option)
                                                                         @php
                                                                             $selected = $questionanswer->option->value;
                                                                             $starValue = $option->value;
@@ -128,7 +142,7 @@
                                                                 value={{ $questionanswer->option_id || ""}}
                                                                 disabled
                                                             >
-                                                                @foreach ($question['options'] as $optionIndex =>$option)
+                                                                @foreach ($question->options()->orderBy('sorting', 'asc')->orderBy("id",'asc')->get() as $optionIndex =>$option)
                                                                     <option key={opt.id} value={{$option->id}} {{ $questionanswer->option_id == $option->id ? "selected" : "" }}>
                                                                         {{$option->name}}
                                                                     </option>

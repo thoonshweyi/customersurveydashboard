@@ -24,6 +24,6 @@ class SurveyResponseMailBoxJob implements ShouldQueue
 
     public function handle(): void
     {
-        Mail::to($this->data["to"])->cc("thoonlay779@gmail.com")->send(new SurveyResponseMailBox($this->data));
+        Mail::to($this->data["to"])->cc("pro1globaldeveloper@gmail.com")->send(new SurveyResponseMailBox($this->data));
     }
 }

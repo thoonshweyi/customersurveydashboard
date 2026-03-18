@@ -104,6 +104,7 @@
                                                         <div class="divider-lines"></div>
                                                     </i>
                                                 </a>
+                                                <a href="javascript:void(0)" class="toolboxitems removesection-btns" title="Remove Section"><i class="fas fa-trash-alt fa-sm text-danger"></i></a>
                                         </div>
                                     </div>
 
@@ -428,6 +429,7 @@
                                             <div class="divider-lines"></div>
                                         </i>
                                     </a>
+                                    <a href="javascript:void(0)" class="toolboxitems removesection-btns" title="Remove Section"><i class="fas fa-trash-alt fa-sm text-danger"></i></a>
                                 </div>
                             </div>
 
@@ -863,6 +865,18 @@
                        question.remove();
                 });
                 {{-- End Remove Btn --}}
+
+                {{-- Start Remove Section Btn --}}
+                $(document).on("click", ".removesection-btns", function () {
+                    const section = $(this).closest(".section");
+                    section.remove();
+                    
+                    const sectionIndex = $('.section').length;
+                    if (sectionIndex <= 1) {
+                        $('.removesection-btns').hide();
+                    }
+                });
+                {{-- End Remove Section Btn --}}
 
           });
      </script>

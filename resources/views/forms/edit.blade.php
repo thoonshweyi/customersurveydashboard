@@ -87,8 +87,8 @@
 
 
                             @foreach ($formattedForm['sections'] as $sectionIndex => $section)
-                                <input type="hidden" name="sections[{{ $sectionIndex }}][id]" value="{{ $section['id'] }}">
                                 <div class="section" data-section-index="{{ $sectionIndex }}" data-question-count="{{ count($section['questions'] ?? []) }}">
+                                    <input type="hidden" name="sections[{{ $sectionIndex }}][id]" value="{{ $section['id'] }}">
                                     <div class="d-flex justify-content-between mt-2">
                                         <h6 class="section-header m-0">Section {{ $sectionIndex + 1 }}</h6>
                                     </div>
@@ -125,6 +125,7 @@
                                                         <div class="divider-lines"></div>
                                                     </i>
                                                 </a>
+                                                <a href="javascript:void(0)" class="toolboxitems removesection-btns" title="Remove Section"><i class="fas fa-trash-alt fa-sm text-danger"></i></a>
                                         </div>
                                     </div>
 
@@ -188,7 +189,7 @@
                                                             @if (!empty($question['options']))
                                                                 @if($question['type'] != 'rating')
                                                                     @foreach ($question['options'] as $optionIndex =>$option)
-                                                                         <input type="hidden" name="sections[{{ $sectionIndex }}][questions][{{ $questionIndex }}][options][{{ $optionIndex }}][id]" value="{{ $option['id'] }}">
+                                                                        <input type="hidden" name="sections[{{ $sectionIndex }}][questions][{{ $questionIndex }}][options][{{ $optionIndex }}][id]" value="{{ $option['id'] }}">
                                                                         <div class="d-flex align-items-center mb-2">
                                                                             <i class="{{ $iconClass }} text-secondary fa-sm"></i>
                                                                             <input
@@ -284,7 +285,7 @@
 
                         <div>
                             <a href="{{ route('forms.index') }}" class="btn btn-sm btn-secondary">Back</a>
-                            <button type="button" id="update-btn" class="btn btn-sm btn-primary ">Updadte</button>
+                            <button type="button" id="update-btn" class="btn btn-sm btn-primary ">Update</button>
                         </div>
 
                     </form>
@@ -593,6 +594,7 @@
                                             <div class="divider-lines"></div>
                                         </i>
                                     </a>
+                                    <a href="javascript:void(0)" class="toolboxitems removesection-btns" title="Remove Section"><i class="fas fa-trash-alt fa-sm text-danger"></i></a>
                                 </div>
                             </div>
 
@@ -929,7 +931,7 @@
                {{-- End Add Option --}}
 
 
-               {{-- Start Import Modal Btn --}}
+                {{-- Start Import Modal Btn --}}
 
                 let targetQuestion;
                 function importoption(tablename){
@@ -1033,6 +1035,19 @@
                 {{-- End Remove Btn --}}
 
 
+                {{-- Start Remove Section Btn --}}
+                $(document).on("click", ".removesection-btns", function () {
+                    const section = $(this).closest(".section");
+                    section.remove();
+                    
+                    const sectionIndex = $('.section').length;
+                    if (sectionIndex <= 1) {
+                        $('.removesection-btns').hide();
+                    }
+                });
+                {{-- End Remove Section Btn --}}
+
+
                 {{-- Start Update Btn --}}
 
                 $('#update-btn').click(function(){
@@ -1052,7 +1067,7 @@
                     });
 
                 });
-                {{-- End Updadte Btn --}}
+                {{-- End Update Btn --}}
 
 
                 $(".clipboard-btn").click(function(){

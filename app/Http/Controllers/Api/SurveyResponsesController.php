@@ -31,7 +31,8 @@ class SurveyResponsesController extends Controller
      */
     public function store(Request $request)
     {
-
+        // Log::info($request);
+        // dd($request);
         $validator = Validator::make($request->all(), [
             'form_id' => 'required|exists:forms,id',
             'questionanswers' => 'required|array',

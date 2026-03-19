@@ -131,6 +131,7 @@
                                                             <option value="checkbox" {{ ($question['type'] ?? '') == 'checkbox' ? 'selected' : '' }}>Checkboxes</option>
                                                             <option value="selectbox" {{ ($question['type'] ?? '') == 'selectbox' ? 'selected' : '' }}>Dropdown</option>
                                                             <option value="rating" {{ ($question['type'] ?? '') == 'rating' ? 'selected' : '' }}>Rating</option>
+                                                            <option value="file" {{ ($question['type'] ?? '') == 'file' ? 'selected' : '' }}>File Upload</option>
                                                         </select>
                                                     </div>
 
@@ -454,6 +455,7 @@
                                                 <option value="checkbox">Checkboxes</option>
                                                 <option value="selectbox">Dropdown</option>
                                                 <option value="rating">Rating</option>
+                                                <option value="file">File Upload</option>
                                             </select>
                                         </div>
                                         <div class="col-lg-12 mt-2 option-container">
@@ -545,6 +547,7 @@
                                         <option value="checkbox">Checkboxes</option>
                                         <option value="selectbox">Dropdown</option>
                                         <option value="rating">Rating</option>
+                                        <option value="file">File Upload</option>
                                     </select>
                                 </div>
                                 <div class="col-lg-12 mt-2 option-container">
@@ -706,6 +709,18 @@
                             html = `
                                 <div class="d-flex justify-content-around align-items-center mb-2">
                                     ${ratings}
+                                </div>
+                            `;
+                            break;
+                        case "file": 
+                            html = `
+                                <div class="d-flex align-items-center py-2 border mt-2" style="background: #fafafa; border-style: dashed !important;">
+                                    <div class="flex-grow-1 ps-3">
+                                        <small class="text-muted">Accepts documents, images, and other file attachments.</small>
+                                    </div>
+                                    <div class="pe-4">
+                                        <i class="fas fa-cloud-upload-alt text-primary" style="font-size: 1rem; opacity: 0.7;"></i>
+                                    </div>
                                 </div>
                             `;
                             break;

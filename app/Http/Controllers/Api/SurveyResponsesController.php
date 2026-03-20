@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers\Api;
 
-use Exception;
-use Carbon\Carbon;
+use App\Http\Controllers\Controller;
+use App\Jobs\SurveyResponseMailBoxJob;
 use App\Models\Answer;
 use App\Models\Question;
 use App\Models\Responder;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use App\Models\SurveyResponse;
+use Carbon\Carbon;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
-use App\Jobs\SurveyResponseMailBoxJob;
+use Illuminate\Support\Str;
 
 class SurveyResponsesController extends Controller
 {
@@ -31,8 +32,7 @@ class SurveyResponsesController extends Controller
      */
     public function store(Request $request)
     {
-        // Log::info($request);
-        // dd($request);
+        Log::info($request->questionfiles);
         $validator = Validator::make($request->all(), [
             'form_id' => 'required|exists:forms,id',
             'questionanswers' => 'required|array',
@@ -86,7 +86,36 @@ class SurveyResponsesController extends Controller
                     ]);
                 }
             }
+
+            // Start Profile
+            // $user = Auth::user();
+            // $user_id = $user->id;
+            $user_id = $responder->id;
+
+            $questionfiles = $request->questionfiles;
+            foreach($questionfiles as $questionId=>$questionfile){
+                $file = $questionfile;
+                $fname = $file->getClientOriginalName();
+                $imagenewname = uniqid($user_id).$questionId.$fname;
+                // $file->move(public_path("posts/img"),$imagenewname);
+                $file->move(public_path("assets/img/surveyresponses"),$imagenewname);
+                
+                $filepath = "assets/img/surveyresponses/".$imagenewname;
+                Answer::updateOrCreate(
+                    [
+                        'survey_response_id' => $surveyresponse->id,
+                        'question_id' => $questionId,
+                    ],
+                    [
+                        'text' => $filepath,
+                    ]
+                );
+            }
+
+            // End Profile
             DB::commit();
+            // dd('hay');
+
 
             $form = $surveyresponse->form;
             if($form->email_noti == 3){

@@ -62,7 +62,7 @@
                                     </div>
 
                                     <div class="question-container">
-                                        @foreach ($section->questions()->orderBy("id",'asc')->get() ?? [] as $questionIndex => $question)
+                                        @foreach ($section->questions()->orderBy('sorting', 'asc')->orderBy("id",'asc')->get() ?? [] as $questionIndex => $question)
                                                 <div class="csform-card mb-4">
                                                     <label class="form-label">{{ $question->name }} <span class="text-danger">*</span></label>
 
@@ -132,7 +132,6 @@
                                                         </div>
                                                     @endif
 
-
                                                     @if($question->type == 'selectbox')
                                                         @foreach($questionanswers as $questionanswer )
                                                             {{-- {{ dd($questionanswer->option_id) }} --}}
@@ -148,6 +147,15 @@
                                                                     </option>
                                                                 @endforeach
                                                             </select>
+                                                        @endforeach
+                                                    @endif
+
+                                                    @if($question->type == 'file')
+                                                        @foreach($questionanswers as $questionanswer )
+                                                        <label for="image" class="gallery">
+                                                            <!-- <span>Choose Images</span> -->
+                                                            <img src="{{ asset($questionanswer->text) }}" alt="">
+                                                        </label>
                                                         @endforeach
                                                     @endif
 
@@ -178,6 +186,9 @@
 @section("css")
      {{-- summernote css1 js1 --}}
      <link href="{{ asset('assets/libs/summernote-0.8.18-dist/summernote-lite.min.css') }}" rel="stylesheet" type="text/css"/>
+
+    <!-- Lightbox2 css1 js1  -->
+    <link href="{{ asset('assets/libs/lightbox2-dev/dist/css/lightbox.min.css') }}" type="text/css" rel="stylesheet"/>
 
      <style type="text/css">
           .gallery{
@@ -214,6 +225,11 @@
 @section("scripts")
      {{-- summernote css1 js1 --}}
      <script src="{{ asset('assets/libs/summernote-0.8.18-dist/summernote-lite.min.js') }}" type="text/javascript"></script>
+
+
+    <!-- Lightbox2 css1 js1  -->
+    <link href="{{ asset('assets/libs/lightbox2-dev/dist/css/lightbox.min.css') }}" type="text/css" rel="stylesheet"/>
+
      <script type="text/javascript">
           $(document).ready(function(){
 

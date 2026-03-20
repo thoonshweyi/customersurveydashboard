@@ -152,8 +152,7 @@
                                                     @endforeach
                                                 @endif
 
-                                                @if($question['type'] == 'selectbox')
-
+                                                @if($question['type'] == 'file')
                                                     <div class="d-flex align-items-center py-2 border mt-2" style="background: #fafafa; border-style: dashed !important;">
                                                         <div class="flex-grow-1 ps-3">
                                                             <small class="text-muted">Accepts documents, images, and other file attachments.</small>

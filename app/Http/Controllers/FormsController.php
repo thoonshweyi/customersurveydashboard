@@ -138,13 +138,13 @@ class FormsController extends Controller
                     'id' => $section->id,
                     'title' => $section->title,
                     'description' => $section->description,
-                    'questions' => $section->questions()->orderBy("id",'asc')->get()->map(function ($question) {
+                    'questions' => $section->questions()->orderBy('sorting', 'asc')->orderBy("id",'asc')->get()->map(function ($question) {
                         return [
                             'id' => $question->id,
                             'name' => $question->name,
                             'type' => $question->type,
                             'required' => $question->required,
-                            'options' => $question->options()->orderBy("id",'asc')->get()->map(function ($option) {
+                            'options' => $question->options()->orderBy('sorting', 'asc')->orderBy("id",'asc')->get()->map(function ($option) {
                                 return [
                                     'id' => $option->id,
                                     'name' => $option->name,
@@ -183,14 +183,14 @@ class FormsController extends Controller
                     'id' => $section->id,
                     'title' => $section->title,
                     'description' => $section->description,
-                    'questions' => $section->questions()->orderBy("id",'asc')->get()->map(function ($question) {
+                    'questions' => $section->questions()->orderBy('sorting', 'asc')->orderBy("id",'asc')->get()->map(function ($question) {
                         return [
                             'id' => $question->id,
                             'name' => $question->name,
                             'type' => $question->type,
                             'required' => $question->required,
                             'import_options' => $question->import_options,
-                            'options' => $question->options()->orderBy("id",'asc')->get()->map(function ($option) {
+                            'options' => $question->options()->orderBy('sorting', 'asc')->orderBy("id",'asc')->get()->map(function ($option) {
                                 return [
                                     'id' => $option->id,
                                     'name' => $option->name,

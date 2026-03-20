@@ -152,6 +152,18 @@
                                                     @endforeach
                                                 @endif
 
+                                                @if($question['type'] == 'selectbox')
+
+                                                    <div class="d-flex align-items-center py-2 border mt-2" style="background: #fafafa; border-style: dashed !important;">
+                                                        <div class="flex-grow-1 ps-3">
+                                                            <small class="text-muted">Accepts documents, images, and other file attachments.</small>
+                                                        </div>
+                                                        <div class="pe-4">
+                                                            <i class="fas fa-cloud-upload-alt text-primary" style="font-size: 1rem; opacity: 0.7;"></i>
+                                                        </div>
+                                                    </div>                                            
+                                                @endif
+
 
                                                 </div>
                                         @endforeach

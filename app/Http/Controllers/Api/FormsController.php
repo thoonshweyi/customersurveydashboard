@@ -44,7 +44,7 @@ class FormsController extends Controller
                     'id' => $section->id,
                     'title' => $section->title,
                     'description' => $section->description,
-                    'questions' => $section->questions()->orderBy("id",'asc')->get()->map(function ($question) {
+                    'questions' => $section->questions()->orderBy('sorting', 'asc')->orderBy("id",'asc')->get()->map(function ($question) {
                         return [
                             'id' => $question->id,
                             'name' => $question->name,
@@ -102,7 +102,7 @@ class FormsController extends Controller
             ->pluck('total', 'answers.option_id');
 
         $results = [
-            'questions' => $form->questions()->orderBy("id",'asc')->get()->map(function ($question)  use ($optionCounts,$branch_ids) {
+            'questions' => $form->questions()->orderBy('sorting', 'asc')->orderBy("id",'asc')->get()->map(function ($question)  use ($optionCounts,$branch_ids) {
                     $average = null;
 
                     if ($question->type === 'rating') {

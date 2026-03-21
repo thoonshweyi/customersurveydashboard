@@ -101,6 +101,8 @@ class SurveyResponsesController extends Controller
                 $file->move(public_path("assets/img/surveyresponses"),$imagenewname);
                 
                 $filepath = "assets/img/surveyresponses/".$imagenewname;
+
+                $mime = $file->getClientMimeType();
                 Answer::updateOrCreate(
                     [
                         'survey_response_id' => $surveyresponse->id,
@@ -108,6 +110,7 @@ class SurveyResponsesController extends Controller
                     ],
                     [
                         'text' => $filepath,
+                        'type' => $mime
                     ]
                 );
             }

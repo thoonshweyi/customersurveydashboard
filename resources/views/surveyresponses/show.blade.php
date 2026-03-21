@@ -154,7 +154,9 @@
                                                         @foreach($questionanswers as $questionanswer )
                                                         <label for="image" class="gallery">
                                                             <!-- <span>Choose Images</span> -->
-                                                            <img src="{{ asset($questionanswer->text) }}" alt="">
+                                                             <a href="{{ asset($questionanswer->text) }}" data-lightbox="image" data-title="{{ $question->name }}">
+                                                                <img src="{{ asset($questionanswer->text) }}" alt="" >
+                                                             </a>
                                                         </label>
                                                         @endforeach
                                                     @endif
@@ -228,12 +230,16 @@
 
 
     <!-- Lightbox2 css1 js1  -->
-    <link href="{{ asset('assets/libs/lightbox2-dev/dist/css/lightbox.min.css') }}" type="text/css" rel="stylesheet"/>
+    <script src="{{ asset('assets/libs/lightbox2-dev/dist/js/lightbox.min.js') }}" type="text/javascript"></script>
+     
 
      <script type="text/javascript">
           $(document).ready(function(){
 
-
+                lightbox.option({
+                    'resizeDuration': 100,
+                    // 'wrapAround': true
+                })
           });
      </script>
 @endsection

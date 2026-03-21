@@ -15,6 +15,7 @@ class Answer extends Model
         'question_id',
         'option_id',
         'text',
+        'type'
     ];
 
     public function option(){

@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
-use App\Models\Form;
-use Illuminate\Http\Request;
-use App\Models\SurveyResponse;
-use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\SurveyResponsesExport;
 use App\Jobs\SurveyResponseMailBoxJob;
+use App\Models\Branch;
+use App\Models\Form;
+use App\Models\SurveyResponse;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SurveyResponsesController extends Controller
 {
@@ -25,11 +26,16 @@ class SurveyResponsesController extends Controller
     }
 
     public function index(Request $request){
-        $results = SurveyResponse::query();
-
         $branch_id = $request->branch_id;
         $form_id = $request->form_id;
-        // dd($branch_id);
+        $from_date = $request->from_date;
+        $to_date = $request->to_date;
+
+
+        $form = Form::find($form_id);
+        $branch = Branch::where('branch_id',$branch_id)->first();
+
+        $results = SurveyResponse::query();
         if(!empty($branch_id)){
             $results = $results->where("branch_id",$branch_id);
         }
@@ -38,10 +44,19 @@ class SurveyResponsesController extends Controller
             $results = $results->where("form_id",$form_id);
         }
 
+        if (!empty($from_date)) {
+            $results = $results->whereDate("submitted_at", ">=", $from_date);
+        }
+
+        if (!empty($to_date)) {
+            $results = $results->whereDate("submitted_at", "<=", $to_date);
+        }
+
 
         $surveyresponses = $results->orderBy("created_at","desc")->paginate(10);
+        $gettoday = Carbon::today()->format("Y-m-d");
 
-        return view("surveyresponses.index",compact('surveyresponses'));
+        return view("surveyresponses.index",compact('surveyresponses','gettoday','form','branch'));
     }
 
     public function show(string $id) {

@@ -35,7 +35,7 @@
           </div>
 
           <div class="col-md-12">
-               <form action="{{ url('/surveyresponses') }}" method="GET">
+               <form id="search_form" action="{{ url('/surveyresponses') }}" method="GET">
                     <input type="hidden" name="branch_id" value="{{ request()->query('branch_id') }}">
                     <input type="hidden" name="form_id" value="{{ request()->query('form_id') }}">
 
@@ -75,7 +75,7 @@
                          </div>
 
                          <div class="col-md-2 col-sm-6 mb-3">
-                              <a href="/surveyresponsesexport/{{ request('form_id') }}/?branch_id={{ request('branch_id') }}" class="btn btn-primary my-0">Export</a>
+                              <button type="button" id="export-btn" class="btn btn-primary my-0">Export</button>
                          </div>
 
                     </div>
@@ -187,7 +187,71 @@
      <script type="text/javascript">
 
           $(document).ready(function(){
-     
+               // Start Excel Export
+                    $('#export-btn').click(function(){
+                         Swal.fire({
+                              title: "Processing...",
+                              text: "Please wait while we generate report Excel file.",
+                              allowOutsideClick: false,
+                              didOpen: () => {
+                                   Swal.showLoading();
+                              }
+                         });
+
+                         $.ajax({
+                              url: "{{ route('surveyresponsesexport', request('form_id')) }}",
+                              type: "GET",
+                              // dataType:"json",
+                              data: $('#search_form').serialize(),
+                              xhrFields: {
+                                   responseType: 'blob'
+                              },
+                              success: function (blob, status, xhr) {
+                              
+                                   let filename = "SurveyResponses.xlsx";
+                                   const disposition = xhr.getResponseHeader('Content-Disposition');
+                                   if (disposition && disposition.includes('filename=')) {
+                                   filename = disposition.split('filename=')[1].replace(/"/g, '');
+                                   }
+
+                                   const url = window.URL.createObjectURL(blob);
+                                   const a = document.createElement('a');
+                                   a.href = url;
+                                   a.download = filename;
+                                   document.body.appendChild(a);
+                                   a.click();
+                                   a.remove();
+                                   window.URL.revokeObjectURL(url);
+
+                                   Swal.close();
+                              },
+                              error:function(response){
+                                   console.log("Error:",response);
+                                   Swal.close(); // Close the modal
+
+                                   console.log(response.responseJSON.message);
+                                   if(response.responseJSON.message == "Maximum execution time of 60 seconds exceeded"){
+                                   Swal.fire({
+                                        icon: "error",
+                                        title: "Oops.... The Excel export took too long and was stopped.",
+                                        text: "Please Try Again",
+                                        {{-- footer: '<a href="#">Why do I have this issue?</a>' --}}
+                                   });
+                                   }else{
+                                   Swal.fire({
+                                        icon: "error",
+                                        title: "Oops...",
+                                        text: "Something went wrong!",
+                                        footer: '<a href="#">Why do I have this issue?</a>'
+                                        });
+                                   }
+                              },
+                              complete: function(){
+                              }
+                         });
+                    });
+               // End Excel Export
+
           });
 
 

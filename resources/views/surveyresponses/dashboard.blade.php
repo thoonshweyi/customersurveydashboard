@@ -84,7 +84,7 @@
                 </div>
                 <div class="card-body">
 
-                    <a href="{{ route('surveyresponsesexport',request()->route('form_id')) }}" class="btn btn-primary my-2">Export</a>
+                    <!-- <a href="{{ route('surveyresponsesexport',request()->route('form_id')) }}" class="btn btn-primary my-2">Export</a> -->
                     <div class="table-responsive">
                         <table id="" class="table table-sm table-hover border">
                                 <thead class="thead-dark">
@@ -104,7 +104,7 @@
                                         <td>{{ $item->total }}</td>
                                         <td>
                                             <a href="/surveyresponses/?branch_id={{ $item->branch_id }}&form_id={{ request()->route('form_id')  }}" class="text-info" ><i class="fas fa-eye"></i></a>
-                                            <a href="/surveyresponsesexport/{{ request()->route('form_id')  }}/?branch_id={{ $item->branch_id  }}" class="text-success"><i class="fas fa-download"></i></a>
+                                            <!-- <a href="/surveyresponsesexport/{{ request()->route('form_id')  }}/?branch_id={{ $item->branch_id  }}" class="text-success"><i class="fas fa-download"></i></a> -->
                                         </td>
 
                                     </tr>

@@ -67,5 +67,25 @@ class SurveyResponse extends Model
         return $answers;
     }
 
+    public function scopeFilter($query)
+    {
+        if ($getfilter = request("branch_id")) {
+            $query->where("branch_id", request('branch_id'));
+        }
+
+        if ($getfilter = request("form_id")) {
+            $query->where("form_id", request('form_id'));
+        }
+
+        if ($getfilter = request("from_date")) {
+            $query->whereDate("submitted_at", ">=", request('from_date'));
+        }
+
+        if ($getfilter = request("to_date")) {
+            $query->whereDate("submitted_at", "<=", request('to_date'));
+        }
+
+        return $query;
+    }
 
 }

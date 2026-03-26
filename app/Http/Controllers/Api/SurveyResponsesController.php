@@ -92,7 +92,7 @@ class SurveyResponsesController extends Controller
             // $user_id = $user->id;
             $user_id = $responder->id;
 
-            $questionfiles = $request->questionfiles;
+            $questionfiles = $request->questionfiles ?? [];
             foreach($questionfiles as $questionId=>$questionfile){
                 $file = $questionfile;
                 $fname = $file->getClientOriginalName();

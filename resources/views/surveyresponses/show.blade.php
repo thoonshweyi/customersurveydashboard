@@ -152,12 +152,37 @@
 
                                                     @if($question->type == 'file')
                                                         @foreach($questionanswers as $questionanswer )
-                                                        <label for="image" class="gallery">
-                                                            <!-- <span>Choose Images</span> -->
-                                                             <a href="{{ asset($questionanswer->text) }}" data-lightbox="image" data-title="{{ $question->name }}">
-                                                                <img src="{{ asset($questionanswer->text) }}" alt="" >
-                                                             </a>
-                                                        </label>
+                                                            @php
+                                                                $mime = $questionanswer->type;
+                                                                $url = asset($questionanswer->text);
+                                                            @endphp
+                                                            
+                                                            @if(str_starts_with($mime, 'image/'))
+                                                            <label for="image" class="gallery">
+                                                                <!-- <span>Choose Images</span> -->
+                                                                <a href="{{ asset($questionanswer->text) }}" data-lightbox="image" data-title="{{ $question->name }}">
+                                                                    <img src="{{ asset($questionanswer->text) }}" alt="" >
+                                                                </a>
+                                                            </label>
+                                                            @elseif($mime === 'application/pdf')
+                                                                <iframe src="{{ $url }}" width="100%" height="500px"></iframe>
+                                                            @elseif(str_starts_with($mime, 'video/'))
+                                                                <video width="320" controls>
+                                                                    <source src="{{ $url }}" type="{{ $mime }}">
+                                                                    Your browser does not support the video tag.
+                                                                </video>
+
+                                                            @elseif(str_starts_with($mime, 'audio/'))
+                                                                <audio controls>
+                                                                    <source src="{{ $url }}" type="{{ $mime }}">
+                                                                    Your browser does not support the audio element.
+                                                                </audio>
+
+                                                            @else
+                                                                <a href="{{ $url }}" target="_blank">
+                                                                    Download File
+                                                                </a>
+                                                            @endif
                                                         @endforeach
                                                     @endif
 

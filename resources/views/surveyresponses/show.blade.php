@@ -63,13 +63,17 @@
 
                                     <div class="question-container">
                                         @foreach ($section->questions()->orderBy('sorting', 'asc')->orderBy("id",'asc')->get() ?? [] as $questionIndex => $question)
+                                                @php
+                                                    $questionanswers = $surveyresponse->questionanswers($question->id);
+                                                @endphp
+                                                @if(count($questionanswers) > 0)
                                                 <div class="csform-card mb-4">
                                                     <label class="form-label">{{ $question->name }} <span class="text-danger">*</span></label>
 
 
-                                                    @php
+                                                    {{-- @php
                                                         $questionanswers = $surveyresponse->questionanswers($question->id);
-                                                    @endphp
+                                                    @endphp --}}
                                                     @if($question->type == 'text' || $question->type == 'textarea')
                                                         @foreach($surveyresponse->questionanswers($question->id) as $questionanswer )
                                                             <p>{{ $questionanswer->text }}</p>
@@ -157,36 +161,39 @@
                                                                 $url = asset($questionanswer->text);
                                                             @endphp
                                                             
-                                                            @if(str_starts_with($mime, 'image/'))
-                                                            <label for="image" class="gallery">
-                                                                <!-- <span>Choose Images</span> -->
-                                                                <a href="{{ asset($questionanswer->text) }}" data-lightbox="image" data-title="{{ $question->name }}">
-                                                                    <img src="{{ asset($questionanswer->text) }}" alt="" >
-                                                                </a>
-                                                            </label>
-                                                            @elseif($mime === 'application/pdf')
-                                                                <iframe src="{{ $url }}" width="100%" height="500px"></iframe>
-                                                            @elseif(str_starts_with($mime, 'video/'))
-                                                                <video width="320" controls>
-                                                                    <source src="{{ $url }}" type="{{ $mime }}">
-                                                                    Your browser does not support the video tag.
-                                                                </video>
+                                                            <div>
+                                                                @if(str_starts_with($mime, 'image/'))
+                                                                <label for="image" class="gallery">
+                                                                    <!-- <span>Choose Images</span> -->
+                                                                    <a href="{{ asset($questionanswer->text) }}" data-lightbox="image" data-title="{{ $question->name }}">
+                                                                        <img src="{{ asset($questionanswer->text) }}" alt="" >
+                                                                    </a>
+                                                                </label>
+                                                                @elseif($mime === 'application/pdf')
+                                                                    <iframe src="{{ $url }}" width="100%" height="500px"></iframe>
+                                                                @elseif(str_starts_with($mime, 'video/'))
+                                                                    <video width="320" controls>
+                                                                        <source src="{{ $url }}" type="{{ $mime }}">
+                                                                        Your browser does not support the video tag.
+                                                                    </video>
 
-                                                            @elseif(str_starts_with($mime, 'audio/'))
-                                                                <audio controls>
-                                                                    <source src="{{ $url }}" type="{{ $mime }}">
-                                                                    Your browser does not support the audio element.
-                                                                </audio>
+                                                                @elseif(str_starts_with($mime, 'audio/'))
+                                                                    <audio controls>
+                                                                        <source src="{{ $url }}" type="{{ $mime }}">
+                                                                        Your browser does not support the audio element.
+                                                                    </audio>
 
-                                                            @else
-                                                                <a href="{{ $url }}" target="_blank">
-                                                                    Download File
-                                                                </a>
-                                                            @endif
+                                                                @else
+                                                                    <a href="{{ $url }}" target="_blank">
+                                                                        Download File
+                                                                    </a>
+                                                                @endif
+                                                            </div>
+
                                                         @endforeach
                                                     @endif
-
                                                 </div>
+                                                @endif
                                         @endforeach
                                     </div>
                                 </div>

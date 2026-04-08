@@ -68,7 +68,7 @@
                                                 @endphp
                                                 @if(count($questionanswers) > 0)
                                                 <div class="csform-card mb-4">
-                                                    <label class="form-label">{{ $question->name }} <span class="text-danger">*</span></label>
+                                                    <label class="form-label">{{ $question->name }} @if($question->required)<span class="text-danger">*</span>@endif</label>
 
 
                                                     {{-- @php
@@ -155,20 +155,19 @@
                                                     @endif
 
                                                     @if($question->type == 'file')
+                                                        <label for="image" class="gallery gap-2">
                                                         @foreach($questionanswers as $questionanswer )
                                                             @php
                                                                 $mime = $questionanswer->type;
                                                                 $url = asset($questionanswer->text);
                                                             @endphp
                                                             
-                                                            <div>
+                                                            <div class="">
                                                                 @if(str_starts_with($mime, 'image/'))
-                                                                <label for="image" class="gallery">
                                                                     <!-- <span>Choose Images</span> -->
                                                                     <a href="{{ asset($questionanswer->text) }}" data-lightbox="image" data-title="{{ $question->name }}">
                                                                         <img src="{{ asset($questionanswer->text) }}" alt="" >
                                                                     </a>
-                                                                </label>
                                                                 @elseif($mime === 'application/pdf')
                                                                     <iframe src="{{ $url }}" width="100%" height="500px"></iframe>
                                                                 @elseif(str_starts_with($mime, 'video/'))
@@ -191,6 +190,7 @@
                                                             </div>
 
                                                         @endforeach
+                                                        </label>
                                                     @endif
                                                 </div>
                                                 @endif

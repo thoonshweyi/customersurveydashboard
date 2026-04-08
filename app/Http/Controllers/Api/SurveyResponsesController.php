@@ -93,26 +93,25 @@ class SurveyResponsesController extends Controller
             $user_id = $responder->id;
 
             $questionfiles = $request->questionfiles ?? [];
-            foreach($questionfiles as $questionId=>$questionfile){
-                $file = $questionfile;
-                $fname = $file->getClientOriginalName();
-                $imagenewname = uniqid($user_id).$questionId.$fname;
-                // $file->move(public_path("posts/img"),$imagenewname);
-                $file->move(public_path("assets/img/surveyresponses"),$imagenewname);
-                
-                $filepath = "assets/img/surveyresponses/".$imagenewname;
+            foreach ($questionfiles as $questionId => $questionfile) {
+                $files = is_array($questionfile) ? $questionfile : [$questionfile];
+                foreach ($files as $file) {
 
-                $mime = $file->getClientMimeType();
-                Answer::updateOrCreate(
-                    [
+                    $fname = $file->getClientOriginalName();
+                    $imagenewname = uniqid($user_id) . '_' . $questionId . '_' . $fname;
+
+                    $file->move(public_path("assets/img/surveyresponses"), $imagenewname);
+
+                    $filepath = "assets/img/surveyresponses/" . $imagenewname;
+                    $mime = $file->getClientMimeType();
+
+                    Answer::create([
                         'survey_response_id' => $surveyresponse->id,
                         'question_id' => $questionId,
-                    ],
-                    [
                         'text' => $filepath,
                         'type' => $mime
-                    ]
-                );
+                    ]);
+                }
             }
 
             // End Profile

@@ -66,7 +66,7 @@
                                                 @php
                                                     $questionanswers = $surveyresponse->questionanswers($question->id);
                                                 @endphp
-                                                @if(count($questionanswers) > 0 || !$question->required)
+                                                @if(count($questionanswers) > 0)
                                                 <div class="csform-card mb-4">
                                                     <label class="form-label">{{ $question->name }} @if($question->required)<span class="text-danger">*</span>@endif</label>
 

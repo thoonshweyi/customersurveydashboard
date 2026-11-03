@@ -31,7 +31,7 @@ class SurveyResponsesExport implements FromCollection, WithHeadings, WithColumnW
     }
 
     public function collection()
-    {
+    { 
         $data = collect();
 
          foreach ($this->surveyresponses as $surveyresponse) {
@@ -40,25 +40,28 @@ class SurveyResponsesExport implements FromCollection, WithHeadings, WithColumnW
             $row[] = $surveyresponse->branch->branch_name;
 
             $answersGrouped = $surveyresponse->answers->groupBy('question_id');
-            // dd($answersGrouped);
 
             foreach ($this->questions as $question) {
                 $answers = $answersGrouped->get($question->id);
+                // dd($question);
 
 
-                $answervalues = $answers?->map(function ($answer) {
-                        return ($answer->text) ? $answer->text : optional($answer->option)->name;
+                $answervalues = $answers?->map(function ($answer) use ($question) {
+                    // return ($answer->text) ? $answer->text : optional($answer->option)->name;
+                    $answerValue = $answer->text ?? optional($answer->option)->name;
+                    if($question->type == 'file'){
+                        $answerValue = asset($answerValue);
+                    }
+                    return $answerValue;
                 })->filter()->unique()->values();
 
-                $row[] = $answervalues?->isNotEmpty() ? $answervalues->implode(', ') : '';
+                $answerCellText = $answervalues?->isNotEmpty() ? $answervalues->implode(', ') : '';
+                $row[] = $answerCellText;
             }
 
             $data->push($row);
         }
-        // dd($data);
-
         return $data;
-
     }
 
 
